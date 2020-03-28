@@ -3,12 +3,12 @@
 
 namespace MyEngine
 {
-	class SceneObject;
+	class GameObject;
 	class Scene
 	{
 		friend Scene& SceneManager::CreateScene(const std::string& name);
 	public:
-		void Add(SceneObject* pObject);
+		void Add(GameObject* pObject);
 
 		void Update(const float deltaTime);
 		void Render() const;
@@ -23,7 +23,7 @@ namespace MyEngine
 		explicit Scene(const std::string& name);
 
 		std::string m_Name;
-		std::vector <SceneObject*> m_Objects{};
+		std::vector <GameObject*> m_Objects{};
 
 		static unsigned int m_IdCounter; 
 	};

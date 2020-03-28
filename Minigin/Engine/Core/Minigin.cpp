@@ -11,6 +11,7 @@
 #include "../Scene/Scene.h"
 #include "../Components/Components.h"
 #include <vld.h>
+#include "../Helpers/Logger.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -35,6 +36,7 @@ void MyEngine::Minigin::Initialize()
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
 	Renderer::GetInstance()->Init(m_Window);
+	Logger::GetInstance()->Initialize();
 }
 
 /**
@@ -80,6 +82,7 @@ void MyEngine::Minigin::Cleanup()
 	SceneManager::Release();
 	InputManager::Release();
 	ResourceManager::Release();
+	Logger::Release();
 	m_Window = nullptr;
 	SDL_Quit();
 }
@@ -100,8 +103,7 @@ void MyEngine::Minigin::Run()
 		{
 			const auto currentTime = high_resolution_clock::now();
 			float deltaTime = duration<float>(currentTime - lastTime).count();
-	
-			doContinue = InputManager::GetInstance()->ProcessInput();
+			doContinue = InputManager::GetInstance()->ProcessSDLEvents();
 			SceneManager::GetInstance()->Update(deltaTime);
 			Renderer::GetInstance()->Render();
 
