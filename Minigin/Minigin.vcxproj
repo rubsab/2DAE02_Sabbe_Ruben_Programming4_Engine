@@ -198,8 +198,10 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClInclude Include="Engine\Components\BaseComponent.h" />
     <ClInclude Include="Engine\Components\Components.h" />
     <ClInclude Include="Engine\Graphics\Font.h" />
+    <ClInclude Include="Engine\Helpers\AchievementSystem.h" />
     <ClInclude Include="Engine\Helpers\Commands.h" />
     <ClInclude Include="Engine\Helpers\FixedSizeAllocator.h" />
+    <ClInclude Include="Engine\Helpers\Observer.h" />
     <ClInclude Include="Engine\Scene\GameObject.h" />
     <ClInclude Include="Engine\Managers\InputManager.h" />
     <ClInclude Include="Engine\Core\Minigin.h" />
