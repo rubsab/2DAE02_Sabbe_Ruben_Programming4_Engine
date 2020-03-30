@@ -12,6 +12,12 @@ void MyEngine::RenderComponent::Update(const float deltaTime)
 	UNREFERENCED_PARAMETER(deltaTime);
 }
 
+void MyEngine::RenderComponent::FixedUpdate(const float fixedDeltaTime)
+{
+	UNREFERENCED_PARAMETER(fixedDeltaTime);
+}
+
+
 void MyEngine::RenderComponent::Render() const
 {
 	for (size_t i{}; i < m_AmountTextures; i++)

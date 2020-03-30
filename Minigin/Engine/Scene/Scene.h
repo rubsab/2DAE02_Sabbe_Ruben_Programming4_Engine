@@ -11,6 +11,7 @@ namespace MyEngine
 		void Add(GameObject* pObject);
 
 		void Update(const float deltaTime);
+		void FixedUpdate(const float fixedDeltaTime);
 		void Render() const;
 
 		~Scene();

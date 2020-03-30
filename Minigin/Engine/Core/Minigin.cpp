@@ -15,6 +15,7 @@
 
 using namespace std;
 using namespace std::chrono;
+const float MyEngine::Minigin::SecPerFrame = 0.016f;
 
 void MyEngine::Minigin::Initialize()
 {
@@ -95,19 +96,24 @@ void MyEngine::Minigin::Run()
 	ResourceManager::GetInstance()->Init("../Data/");
 
 	LoadGame();
-
 	{
 		bool doContinue = true;
+		float lag = 0.0f;
 		auto lastTime = high_resolution_clock::now();
 		while (doContinue)
 		{
 			const auto currentTime = high_resolution_clock::now();
 			float deltaTime = duration<float>(currentTime - lastTime).count();
+			lastTime = currentTime;
+			lag += deltaTime;
 			doContinue = InputManager::GetInstance()->ProcessSDLEvents();
 			SceneManager::GetInstance()->Update(deltaTime);
+			while (lag >= SecPerFrame)
+			{
+				SceneManager::GetInstance()->FixedUpdate(SecPerFrame);
+				lag -= SecPerFrame;
+			}
 			Renderer::GetInstance()->Render();
-
-			lastTime = currentTime;	
 		}
 	}
 

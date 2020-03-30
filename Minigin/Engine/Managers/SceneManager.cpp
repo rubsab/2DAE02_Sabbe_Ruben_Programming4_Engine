@@ -10,6 +10,14 @@ void MyEngine::SceneManager::Update(const float deltaTime)
 	}
 }
 
+void MyEngine::SceneManager::FixedUpdate(const float fixedDeltaTime)
+{
+	for (Scene* pScene : m_Scenes)
+	{
+		pScene->FixedUpdate(fixedDeltaTime);
+	}
+}
+
 void MyEngine::SceneManager::Render()
 {
 	for (const Scene* pScene : m_Scenes)

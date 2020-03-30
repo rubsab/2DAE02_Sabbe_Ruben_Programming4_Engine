@@ -6,6 +6,7 @@ namespace MyEngine
 	{
 	public:
 		void Update(const float deltaTime);
+		void FixedUpdate(const float fixedDeltaTime);
 		void Render() const;
 		void AddComponent(BaseComponent* pComponent);
 		template <class T>

@@ -7,6 +7,11 @@ void MyEngine::TransformComponent::Update(const float deltaTime)
 	UNREFERENCED_PARAMETER(deltaTime);
 }
 
+void MyEngine::TransformComponent::FixedUpdate(const float fixedDeltaTime)
+{
+	UNREFERENCED_PARAMETER(fixedDeltaTime);
+}
+
 void MyEngine::TransformComponent::Render() const
 {
 

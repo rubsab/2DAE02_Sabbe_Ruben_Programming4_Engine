@@ -15,6 +15,11 @@ void MyEngine::FPSComponent::Update(const float deltaTime)
 	}
 }
 
+void MyEngine::FPSComponent::FixedUpdate(const float fixedDeltaTime)
+{
+	UNREFERENCED_PARAMETER(fixedDeltaTime);
+}
+
 void MyEngine::FPSComponent::Render() const
 {
 }

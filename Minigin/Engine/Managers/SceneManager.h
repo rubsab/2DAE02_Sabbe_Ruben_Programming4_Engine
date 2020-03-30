@@ -11,6 +11,7 @@ namespace MyEngine
 		~SceneManager();
 
 		void Update(const float deltaTime);
+		void FixedUpdate(const float fixedDeltaTime);
 		void Render();
 	private:
 		friend class Singleton<SceneManager>;

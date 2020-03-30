@@ -21,6 +21,14 @@ void MyEngine::GameObject::Update(const float deltaTime)
 	}
 }
 
+void MyEngine::GameObject::FixedUpdate(const float fixedDeltaTime)
+{
+	for (BaseComponent* pComp : m_Components)
+	{
+		pComp->FixedUpdate(fixedDeltaTime);
+	}
+}
+
 void MyEngine::GameObject::Render() const
 {
 	for (BaseComponent* pComp : m_Components)

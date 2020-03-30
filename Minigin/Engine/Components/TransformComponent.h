@@ -9,6 +9,7 @@ namespace MyEngine
 	public:
 		//Inherited
 		virtual void Update(const float deltaTime) override;
+		virtual void FixedUpdate(const float fixedDeltaTime) override;
 		virtual void Render() const override;
 
 		TransformComponent(const Vector2 pos = { 0.0f, 0.0f });

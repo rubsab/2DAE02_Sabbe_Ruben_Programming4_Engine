@@ -12,6 +12,11 @@
 void MyEngine::TextComponent::Update(const float deltaTime)
 {
 	UNREFERENCED_PARAMETER(deltaTime);
+}
+
+void MyEngine::TextComponent::FixedUpdate(const float fixedDeltaTime)
+{
+	UNREFERENCED_PARAMETER(fixedDeltaTime);
 	if (m_NeedsUpdate)
 	{
 		const auto surf = TTF_RenderText_Blended(m_pFont->GetFont(), m_Text.c_str(), m_Color);

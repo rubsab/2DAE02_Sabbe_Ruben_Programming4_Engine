@@ -11,6 +11,7 @@ namespace MyEngine
 	public:
 		//Inherited
 		virtual void Update(const float deltaTime) override;
+		virtual void FixedUpdate(const float fixedDeltaTime) override;
 		virtual void Render() const override;
 
 		TextComponent(const std::string& text, Font* font, SDL_Color color);

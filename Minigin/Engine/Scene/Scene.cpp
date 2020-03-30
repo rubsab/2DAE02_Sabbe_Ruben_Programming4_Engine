@@ -32,6 +32,14 @@ void Scene::Update(const float deltaTime)
 	}
 }
 
+void MyEngine::Scene::FixedUpdate(const float fixedDeltaTime)
+{
+	for (GameObject* pGameObj : m_Objects)
+	{
+		pGameObj->FixedUpdate(fixedDeltaTime);
+	}
+}
+
 void Scene::Render() const
 {
 	for (const GameObject* pGameObj : m_Objects)
