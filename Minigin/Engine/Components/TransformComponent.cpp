@@ -22,7 +22,7 @@ MyEngine::TransformComponent::TransformComponent(const Vector2 pos)
 {
 }
 
-const Vector2& MyEngine::TransformComponent::GetPosition() const
+const MyEngine::Vector2& MyEngine::TransformComponent::GetPosition() const
 {
 	return m_Position;
 }

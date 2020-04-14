@@ -38,6 +38,7 @@ void MyEngine::Minigin::Initialize()
 	}
 	Renderer::GetInstance()->Init(m_Window);
 	Logger::GetInstance()->Initialize();
+	ResourceManager::GetInstance()->Init("../Data/");
 }
 
 /**
@@ -58,7 +59,7 @@ void MyEngine::Minigin::LoadGame() const
 	go->AddComponent(new RenderComponent(1));
 	go->GetComponent<RenderComponent>()->AddTexture(ResourceManager::GetInstance()->LoadTexture("logo.png"));
 	scene.Add(go);
-	
+
 	go = new GameObject();
 	go->AddComponent(new TransformComponent({ 80.0f, 20.0f }));
 	go->AddComponent(new RenderComponent(1));
@@ -90,31 +91,24 @@ void MyEngine::Minigin::Cleanup()
 
 void MyEngine::Minigin::Run()
 {
-	Initialize();
 
-	// tell the resource manager where he can find the game data
-	ResourceManager::GetInstance()->Init("../Data/");
-
-	LoadGame();
+	bool doContinue = true;
+	float lag = 0.0f;
+	auto lastTime = high_resolution_clock::now();
+	while (doContinue)
 	{
-		bool doContinue = true;
-		float lag = 0.0f;
-		auto lastTime = high_resolution_clock::now();
-		while (doContinue)
+		const auto currentTime = high_resolution_clock::now();
+		float deltaTime = duration<float>(currentTime - lastTime).count();
+		lastTime = currentTime;
+		lag += deltaTime;
+		doContinue = InputManager::GetInstance()->ProcessSDLEvents();
+		SceneManager::GetInstance()->Update(deltaTime);
+		while (lag >= SecPerFrame)
 		{
-			const auto currentTime = high_resolution_clock::now();
-			float deltaTime = duration<float>(currentTime - lastTime).count();
-			lastTime = currentTime;
-			lag += deltaTime;
-			doContinue = InputManager::GetInstance()->ProcessSDLEvents();
-			SceneManager::GetInstance()->Update(deltaTime);
-			while (lag >= SecPerFrame)
-			{
-				SceneManager::GetInstance()->FixedUpdate(SecPerFrame);
-				lag -= SecPerFrame;
-			}
-			Renderer::GetInstance()->Render();
+			SceneManager::GetInstance()->FixedUpdate(SecPerFrame);
+			lag -= SecPerFrame;
 		}
+		Renderer::GetInstance()->Render();
 	}
 
 	Cleanup();
