@@ -21,7 +21,7 @@ namespace MyEngine
 			return nullptr;
 		}
 
-		GameObject() = default;
+		GameObject();
 		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;

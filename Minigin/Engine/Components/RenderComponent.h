@@ -5,6 +5,13 @@
 namespace MyEngine
 {
 	class Texture2D;
+	struct AnimatedTexture
+	{
+		Texture2D* Texture;
+		int Rows, Columns, CurrentFrame;
+		float FrameTime, CurrentTime;
+		bool IsAnimated;
+	};
 	class RenderComponent final : public BaseComponent
 	{
 	public:
@@ -16,9 +23,9 @@ namespace MyEngine
 		~RenderComponent();
 
 		RenderComponent(const size_t maxAmountTextures);
-		void AddTexture(Texture2D* texture);
+		void AddTexture(const std::string& filePath, bool isAnimated = false, const int rows = 1, const int columns = 1, const float frameTime = 1.0f);
 	private:
-		std::vector<Texture2D*> m_Textures;
+		std::vector<AnimatedTexture> m_Textures;
 		size_t m_AmountTextures = 0;
 	};
 }

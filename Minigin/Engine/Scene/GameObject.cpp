@@ -3,7 +3,13 @@
 #include "../Managers/ResourceManager.h"
 #include "../Graphics/Renderer.h"
 #include "../Components/BaseComponent.h"
+#include "../Components/TransformComponent.h"
 #include <exception>
+
+MyEngine::GameObject::GameObject()
+{
+	AddComponent(new TransformComponent());
+}
 
 MyEngine::GameObject::~GameObject()
 {

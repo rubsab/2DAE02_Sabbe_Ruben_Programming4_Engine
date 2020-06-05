@@ -8,7 +8,9 @@
 #include "../Graphics/Texture2D.h"
 #include "../Scene/GameObject.h"
 #include "RenderComponent.h"
+#include "TransformComponent.h"
 #include "../Helpers/Structs.h"
+#include "../Managers/ResourceManager.h"
 
 void MyEngine::TextComponent::Update(const float deltaTime)
 {
@@ -38,6 +40,10 @@ void MyEngine::TextComponent::FixedUpdate(const float fixedDeltaTime)
 
 void MyEngine::TextComponent::Render() const
 {
+	Vector2 pos{ m_pGameObject->GetComponent<TransformComponent>()->GetPosition() };
+	SDL_Rect dstRect{ static_cast<int>(pos.x), static_cast<int>(pos.y) };
+	SDL_QueryTexture(m_pTexture->GetSDLTexture(), nullptr, nullptr, &dstRect.w, &dstRect.h);
+	Renderer::GetInstance()->RenderTexture(*m_pTexture, &dstRect);
 }
 
 MyEngine::TextComponent::TextComponent(const std::string& text, Font* font, SDL_Color color)
@@ -58,13 +64,13 @@ MyEngine::TextComponent::TextComponent(const std::string& text, Font* font, SDL_
 		}
 		SDL_FreeSurface(surf);
 		m_pTexture = new Texture2D(texture);
+		ResourceManager::GetInstance()->m_Textures.push_back(IndexedTexture{ m_pTexture, ""});
 		m_NeedsUpdate = false;
 	}
 }
 
 MyEngine::TextComponent::~TextComponent()
 {
-	delete m_pFont;
 }
 
 MyEngine::Texture2D* MyEngine::TextComponent::GetTexture() const
