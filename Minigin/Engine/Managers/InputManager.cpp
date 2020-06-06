@@ -4,23 +4,28 @@
 #include "../Scene/GameObject.h"
 #include "../Helpers/Logger.h"
 
-
 MyEngine::InputManager::~InputManager()
 {
-	for (std::pair<ControllerButton, std::vector<Command*>> pair : m_ControllerMappings)
+	for (std::pair<const int, std::vector<const Command*>> pair : m_ControllerMappings)
 	{
-		for (Command* command : pair.second)
+		for (const Command* command : pair.second)
 			delete command;
 	}
 
-	for (std::pair<KeyBoardKey, std::vector<Command*>> pair : m_KeyBoardMappings)
+	for (std::pair<const int, std::vector<const Command*>> pair : m_KeyBoardMappings)
 	{
-		for (Command* command : pair.second)
+		for (const Command* command : pair.second)
+			delete command;
+	}
+
+	for (std::pair<const int, std::vector<const Command*>> pair : m_MouseMappings)
+	{
+		for (const Command* command : pair.second)
 			delete command;
 	}
 }
 
-bool MyEngine::InputManager::ProcessSDLEvents()
+bool MyEngine::InputManager::ProcessSDLEvents() const
 {
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
@@ -31,64 +36,132 @@ bool MyEngine::InputManager::ProcessSDLEvents()
 	return true;
 }
 
-void MyEngine::InputManager::ProcessInput(GameObject* object)
+void MyEngine::InputManager::ProcessInput()
 {
-	for (std::pair<ControllerButton, std::vector<Command*>> pair : m_ControllerMappings)
+	UpdateStates(Hardware::KeyBoard);
+	ExecuteCommands(Hardware::KeyBoard, m_KeyBoardMappings);
+	UpdateStates(Hardware::Controller);
+	ExecuteCommands(Hardware::Controller, m_ControllerMappings);
+	UpdateStates(Hardware::Mouse);
+	ExecuteCommands(Hardware::Mouse, m_MouseMappings);
+}
+
+bool MyEngine::InputManager::IsButtonState(const int buttonCode, const Hardware& hardWare, const ButtonState& buttonState)
+{
+	switch (hardWare)
 	{
-		if (IsPressed(pair.first))
+	case(Hardware::KeyBoard):
+		return (m_KeyBoardStates[buttonCode] == buttonState);
+		break;
+	case(Hardware::Controller):
+		return (m_ControllerStates[buttonCode] == buttonState);
+		break;
+	case(Hardware::Mouse):
+		return (m_MouseStates[buttonCode] == buttonState);
+		break;
+	default:
+		return false;
+	}
+}
+
+bool MyEngine::InputManager::IsPressed(const int buttonCode, const Hardware& hardWare)
+{
+	return IsButtonState(buttonCode, hardWare, ButtonState::Pressed);
+}
+
+bool MyEngine::InputManager::IsDown(const int buttonCode, const Hardware& hardWare)
+{
+	return IsButtonState(buttonCode, hardWare, ButtonState::Down);
+}
+
+bool MyEngine::InputManager::IsReleased(const int buttonCode, const Hardware& hardWare)
+{
+	return IsButtonState(buttonCode, hardWare, ButtonState::Released);
+}
+
+void MyEngine::InputManager::AddCommand(const int buttonCode, const Hardware& hardWare, const Command* command)
+{
+	switch (hardWare)
+	{
+	case(Hardware::KeyBoard):
+		AddCommand(m_KeyBoardMappings, buttonCode, command);
+		m_KeyBoardStates[buttonCode] = ButtonState::None;
+		break;
+	case(Hardware::Controller):
+		AddCommand(m_ControllerMappings, buttonCode, command);
+		m_ControllerStates[buttonCode] = ButtonState::None;
+		break;
+	case(Hardware::Mouse):
+		AddCommand(m_MouseMappings, buttonCode, command);
+		m_MouseStates[buttonCode] = ButtonState::None;
+		break;
+	default:
+		break;
+	}
+}
+
+void MyEngine::InputManager::UpdateStates(const Hardware& hardWare)
+{
+	XINPUT_STATE* pState{};
+	WORD buttons{};
+	switch (hardWare)
+	{
+	case(Hardware::KeyBoard):
+		for (std::pair<const int, ButtonState>& button : m_KeyBoardStates)
+			UpdateState(GetKeyState(button.first) & 0x8000, button);
+		break;
+	case(Hardware::Controller):
+		pState = new XINPUT_STATE();
+		XInputGetState(1, pState);
+		buttons = pState->Gamepad.wButtons;
+		delete pState;
+		for (std::pair<const int, ButtonState>& button : m_ControllerStates)
+			UpdateState(buttons & WORD(button.first), button);
+		break;
+	case(Hardware::Mouse):
+		for (std::pair<const int, ButtonState>& button : m_MouseStates)
+			UpdateState(GetKeyState(button.first) & 0x80, button);
+		break;
+	default:
+		break;
+	}
+}
+
+void MyEngine::InputManager::UpdateState(const bool down, std::pair<const int, ButtonState>& button)
+{
+	if (down)
+	{
+		if (button.second == ButtonState::None || button.second == ButtonState::Pressed)
+			button.second = ButtonState(int(button.second) + 1);
+	}
+	else
+	{
+		if (button.second == ButtonState::Down || button.second == ButtonState::Released)
+			button.second = ButtonState((int(button.second) + 1) % 4);
+	}
+}
+
+void MyEngine::InputManager::ExecuteCommands(const Hardware& hardWare, const std::map<const int, std::vector<const Command*>>& mappings)
+{
+	for (const std::pair<const int, std::vector<const Command*>>& pair : mappings)
+	{
+		for (const Command* command : pair.second)
 		{
-			for (Command* command : pair.second)
-				command->Execute(object);
+			if (IsButtonState(pair.first, hardWare, command->State))
+				command->Action();
 		}
 	}
+}
 
-	for (std::pair<KeyBoardKey, std::vector<Command*>> pair : m_KeyBoardMappings)
+void MyEngine::InputManager::AddCommand(std::map<const int, std::vector<const Command*>>& mappings, const int buttonCode, const Command* command)
+{
+	for (const Command* pCommand : mappings[buttonCode])
 	{
-		if (IsPressed(pair.first))
+		if (pCommand == command)
 		{
-			for (Command* command : pair.second)
-				command->Execute(object);
-		}
-	}
-}
-
-bool MyEngine::InputManager::IsPressed(ControllerButton button) const
-{
-	XINPUT_STATE* pState = new XINPUT_STATE();
-	XInputGetState(1, pState);
-	WORD buttons = pState->Gamepad.wButtons;
-	delete pState;
-	return buttons & WORD(button);
-}
-
-bool MyEngine::InputManager::IsPressed(KeyBoardKey key) const
-{
-	return(GetKeyState(int(key)) & 0x8000);
-}
-
-void MyEngine::InputManager::AddCommand(ControllerButton button, Command* command)
-{
-	for (Command* pCommand : m_ControllerMappings[button])
-	{
-		if (typeid(*pCommand) == typeid(*command))
-		{
-			Logger::GetInstance()->LogWarning("Command already added to button (Created memory leak)");
+			Logger::GetInstance()->LogWarning("Command already added to button");
 			return;
 		}
 	}
-	m_ControllerMappings[button].push_back(command);
+	mappings[buttonCode].push_back(command);
 }
-
-void MyEngine::InputManager::AddCommand(KeyBoardKey key, Command* command)
-{
-	for (Command* pCommand : m_KeyBoardMappings[key])
-	{
-		if (typeid(*pCommand) == typeid(*command))
-		{
-			Logger::GetInstance()->LogWarning("Command already added to key (Created memory leak)");
-			return;
-		}
-	}
-	m_KeyBoardMappings[key].push_back(command);
-}
-

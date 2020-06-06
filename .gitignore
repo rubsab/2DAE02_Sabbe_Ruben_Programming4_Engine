@@ -5,3 +5,12 @@ Minigin/Win32/Release/
 .vs/
 x64/
 Win32/
+*.pdb
+*.idb
+*.tlog
+*.obj
+*.exe
+*.ilk
+*.dll
+*.txt
+*.log

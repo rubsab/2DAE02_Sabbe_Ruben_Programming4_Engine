@@ -7,6 +7,7 @@
 #include <exception>
 
 MyEngine::GameObject::GameObject()
+	:m_State(-1)
 {
 	AddComponent(new TransformComponent());
 }

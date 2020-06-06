@@ -17,12 +17,12 @@ void MyEngine::TransformComponent::Render() const
 
 }
 
-MyEngine::TransformComponent::TransformComponent(const Vector2 pos)
+MyEngine::TransformComponent::TransformComponent(const glm::fvec2 pos)
 	:m_Position{ pos }
 {
 }
 
-const MyEngine::Vector2& MyEngine::TransformComponent::GetPosition() const
+const glm::fvec2& MyEngine::TransformComponent::GetPosition() const
 {
 	return m_Position;
 }
@@ -31,4 +31,9 @@ void MyEngine::TransformComponent::SetPosition(const float x, const float y)
 {
 	m_Position.x = x;
 	m_Position.y = y;
+}
+
+void MyEngine::TransformComponent::SetPosition(const glm::fvec2& pos)
+{
+	m_Position = pos;
 }

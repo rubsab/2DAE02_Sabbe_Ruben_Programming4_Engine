@@ -4,8 +4,9 @@
 #include <thread>
 #include "../Managers/InputManager.h"
 #include "../Managers/SceneManager.h"
-#include "../Graphics/Renderer.h"
 #include "../Managers/ResourceManager.h"
+#include "../Managers/SoundManager.h"
+#include "../Graphics/Renderer.h"
 #include <SDL.h>
 #include "../Scene/GameObject.h"
 #include "../Scene/Scene.h"
@@ -17,7 +18,7 @@ using namespace std;
 using namespace std::chrono;
 const float MyEngine::Minigin::SecPerFrame = 0.016f;
 
-void MyEngine::Minigin::Initialize()
+void MyEngine::Minigin::Initialize(const std::string& dataPath)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
@@ -38,7 +39,8 @@ void MyEngine::Minigin::Initialize()
 	}
 	Renderer::GetInstance()->Init(m_Window);
 	Logger::GetInstance()->Initialize();
-	ResourceManager::GetInstance()->Init("../Data/");
+	ResourceManager::GetInstance()->Init(dataPath + "Images/");
+	SoundManager::GetInstance()->Init(dataPath + "Sound/");
 }
 
 /**
@@ -56,6 +58,7 @@ void MyEngine::Minigin::Cleanup()
 	SceneManager::Release();
 	InputManager::Release();
 	ResourceManager::Release();
+	SoundManager::Release();
 	Logger::Release();
 	m_Window = nullptr;
 	SDL_Quit();
@@ -74,6 +77,7 @@ void MyEngine::Minigin::Run()
 		lastTime = currentTime;
 		lag += deltaTime;
 		doContinue = InputManager::GetInstance()->ProcessSDLEvents();
+		InputManager::GetInstance()->ProcessInput();
 		SceneManager::GetInstance()->Update(deltaTime);
 		while (lag >= SecPerFrame)
 		{

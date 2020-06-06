@@ -2,47 +2,49 @@
 #include <XInput.h>
 #include "../Helpers/Singleton.h"
 #include <map>
-#include "../Helpers/Commands.h"
+#include <functional>
 
 namespace MyEngine
 {
 	class GameObject;
-	enum class ControllerButton
+	enum class ButtonState
 	{
-		ButtonA = XINPUT_GAMEPAD_A,
-		ButtonB = XINPUT_GAMEPAD_B,
-		ButtonX = XINPUT_GAMEPAD_X,
-		ButtonY = XINPUT_GAMEPAD_Y
+		None,
+		Pressed,
+		Down,
+		Released
+	};
+	enum class Hardware
+	{
+		KeyBoard,
+		Controller,
+		Mouse
 	};
 
-	enum class KeyBoardKey
+	struct Command
 	{
-		KeyUp = VK_UP,
-		KeyDown = VK_DOWN,
-		KeyLeft = VK_LEFT,
-		KeyRight = VK_RIGHT,
-		KeyW = 'W',
-		KeyS = 'S',
-		KeyA = 'A',
-		KeyD = 'D',
-		KeyShift = VK_SHIFT,
-		KeyControl = VK_CONTROL,
-		KeySpace = VK_SPACE
+		std::function<void()> Action;
+		ButtonState State;
 	};
 
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
 		~InputManager();
-		bool ProcessSDLEvents();
-		void ProcessInput(GameObject* object);
-		bool IsPressed(ControllerButton button) const;
-		bool IsPressed(KeyBoardKey key) const;
-		void AddCommand(ControllerButton button, Command* command);
-		void AddCommand(KeyBoardKey key, Command* command);
+		bool ProcessSDLEvents() const;
+		void ProcessInput();
+		bool IsButtonState(const int buttonCode, const Hardware& hardWare, const ButtonState& buttonState);
+		bool IsPressed(const int buttonCode, const Hardware& hardWare);
+		bool IsDown(const int buttonCode, const Hardware& hardWare);
+		bool IsReleased(const int buttonCode, const Hardware& hardWare);
+		void AddCommand(const int buttonCode, const Hardware& hardWare, const Command* command);
 	private:
-		std::map<ControllerButton, std::vector<Command*>> m_ControllerMappings;
-		std::map<KeyBoardKey, std::vector<Command*>> m_KeyBoardMappings;
+		void UpdateStates(const Hardware& hardWare);
+		void UpdateState(const bool down, std::pair<const int, ButtonState>& button);
+		void ExecuteCommands(const Hardware& hardWare, const std::map<const int, std::vector<const Command*>>& mappings);
+		void AddCommand(std::map<const int, std::vector<const Command*>>& mappings, const int buttonCode, const Command* command);
+		std::map<const int, std::vector<const Command*>> m_ControllerMappings, m_KeyBoardMappings, m_MouseMappings;
+		std::map<const int, ButtonState> m_ControllerStates, m_KeyBoardStates, m_MouseStates;
 	};
 
 }

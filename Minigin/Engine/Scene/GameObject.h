@@ -20,6 +20,8 @@ namespace MyEngine
 			}
 			return nullptr;
 		}
+		void SetState(int state) { m_State = state; }
+		int GetState() const { return m_State; }
 
 		GameObject();
 		~GameObject();
@@ -30,5 +32,6 @@ namespace MyEngine
 
 	private:
 		std::vector<BaseComponent*> m_Components;
+		int m_State;
 	};
 }

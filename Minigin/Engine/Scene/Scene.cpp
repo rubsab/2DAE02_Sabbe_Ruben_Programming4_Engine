@@ -27,7 +27,6 @@ void Scene::Update(const float deltaTime)
 {
 	for(GameObject* pGameObj : m_Objects)
 	{
-		InputManager::GetInstance()->ProcessInput(pGameObj);
 		pGameObj->Update(deltaTime);
 	}
 }

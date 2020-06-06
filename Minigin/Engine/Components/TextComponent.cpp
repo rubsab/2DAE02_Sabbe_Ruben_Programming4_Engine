@@ -9,7 +9,6 @@
 #include "../Scene/GameObject.h"
 #include "RenderComponent.h"
 #include "TransformComponent.h"
-#include "../Helpers/Structs.h"
 #include "../Managers/ResourceManager.h"
 
 void MyEngine::TextComponent::Update(const float deltaTime)
@@ -40,7 +39,7 @@ void MyEngine::TextComponent::FixedUpdate(const float fixedDeltaTime)
 
 void MyEngine::TextComponent::Render() const
 {
-	Vector2 pos{ m_pGameObject->GetComponent<TransformComponent>()->GetPosition() };
+	glm::vec2 pos{ m_pGameObject->GetComponent<TransformComponent>()->GetPosition() };
 	SDL_Rect dstRect{ static_cast<int>(pos.x), static_cast<int>(pos.y) };
 	SDL_QueryTexture(m_pTexture->GetSDLTexture(), nullptr, nullptr, &dstRect.w, &dstRect.h);
 	Renderer::GetInstance()->RenderTexture(*m_pTexture, &dstRect);
