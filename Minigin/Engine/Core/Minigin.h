@@ -5,7 +5,7 @@ namespace MyEngine
 	class Minigin
 	{
 	public:
-		void Initialize(const std::string& dataPath);
+		void Initialize(const std::string& dataPath, const char* windowTitle, const int windowWidth, const int windowHeight);
 		void LoadGame() const;
 		void Cleanup();
 		void Run();

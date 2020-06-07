@@ -51,11 +51,17 @@ void MyEngine::RenderComponent::Render() const
 					dstRect.w / m_Textures[i].Columns,
 					dstRect.h / m_Textures[i].Rows };
 				DimensionsSet(i, dstRect);
-				Renderer::GetInstance()->RenderTexture(*m_Textures[i].Texture, &dstRect, &srcRect);
+				SDL_Point pivot = { int(m_Textures[i].Pivot.x * dstRect.w), int(m_Textures[i].Pivot.y * dstRect.h) };
+				dstRect.x -= pivot.x;
+				dstRect.y -= pivot.y;
+				Renderer::GetInstance()->RenderTexture(*m_Textures[i].Texture, &dstRect, &srcRect, m_pGameObject->GetComponent<TransformComponent>()->GetRotation(), pivot);
 				continue;
 			}
 			DimensionsSet(i, dstRect);
-			Renderer::GetInstance()->RenderTexture(*m_Textures[i].Texture, &dstRect, nullptr);
+			SDL_Point pivot = { int(m_Textures[i].Pivot.x * dstRect.w), int(m_Textures[i].Pivot.y * dstRect.h) };
+			dstRect.x -= pivot.x;
+			dstRect.y -= pivot.y;
+			Renderer::GetInstance()->RenderTexture(*m_Textures[i].Texture, &dstRect, nullptr, m_pGameObject->GetComponent<TransformComponent>()->GetRotation(), pivot);
 		}
 	}
 }
@@ -69,31 +75,11 @@ MyEngine::RenderComponent::RenderComponent(const size_t maxAmountTextures)
 {
 }
 
-void MyEngine::RenderComponent::AddTexture(const std::string& filePath, const int rows, const int columns, const float frameTime, const int activeState)
-{
-	AddTexture(filePath, rows, columns, frameTime, 0, 0, activeState, true);
-}
-
-void MyEngine::RenderComponent::AddTexture(const std::string& filePath, const int rows, const int columns, const float frameTime, const int drawWidth, const int drawHeight, const int activeState)
-{
-	AddTexture(filePath, rows, columns, frameTime, drawWidth, drawHeight, activeState, true);
-}
-
-void MyEngine::RenderComponent::AddTexture(const std::string& filePath, const int activeState)
-{
-	AddTexture(filePath, 0, 0, 0.0f, 0, 0, activeState, false);
-}
-
-void MyEngine::RenderComponent::AddTexture(const std::string& filePath, const int drawWidth, const int drawHeight, const int activeState)
-{
-	AddTexture(filePath, 0, 0, 0.0f, drawWidth, drawHeight, activeState, false);
-}
-
-void MyEngine::RenderComponent::AddTexture(const std::string& filePath, const int rows, const int columns, const float frameTime, const int drawWidth, const int drawHeight, const int activeState, bool isAnimated)
+void MyEngine::RenderComponent::AddTexture(const std::string& filePath, bool isAnimated, const int rows, const int columns, const float frameTime, const int drawWidth, const int drawHeight, const glm::fvec2& pivot, const int activeState)
 {
 	if (m_AmountTextures == m_Textures.size())
 		throw std::exception("Max nr of textures reached");
-	m_Textures[m_AmountTextures] = { ResourceManager::GetInstance()->LoadTexture(filePath), frameTime, 0.0f, rows, columns, 0, activeState, drawWidth, drawHeight, isAnimated };
+	m_Textures[m_AmountTextures] = { ResourceManager::GetInstance()->LoadTexture(filePath), frameTime, 0.0f, rows, columns, 0, activeState, drawWidth, drawHeight, isAnimated, pivot };
 	m_AmountTextures++;
 }
 

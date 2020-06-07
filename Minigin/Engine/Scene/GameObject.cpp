@@ -5,11 +5,13 @@
 #include "../Components/BaseComponent.h"
 #include "../Components/TransformComponent.h"
 #include <exception>
+#include <glm\common.hpp>
 
-MyEngine::GameObject::GameObject()
-	:m_State(-1)
+MyEngine::GameObject::GameObject(const glm::fvec2& pos, const float angle):
+	m_State(-1),
+	m_IsActive(true)
 {
-	AddComponent(new TransformComponent());
+	AddComponent(new TransformComponent(pos, angle));
 }
 
 MyEngine::GameObject::~GameObject()
@@ -22,6 +24,8 @@ MyEngine::GameObject::~GameObject()
 
 void MyEngine::GameObject::Update(const float deltaTime)
 {
+	if (!m_IsActive)
+		return;
 	for (BaseComponent* pComp : m_Components)
 	{
 		pComp->Update(deltaTime);
@@ -30,6 +34,8 @@ void MyEngine::GameObject::Update(const float deltaTime)
 
 void MyEngine::GameObject::FixedUpdate(const float fixedDeltaTime)
 {
+	if (!m_IsActive)
+		return;
 	for (BaseComponent* pComp : m_Components)
 	{
 		pComp->FixedUpdate(fixedDeltaTime);
@@ -38,6 +44,8 @@ void MyEngine::GameObject::FixedUpdate(const float fixedDeltaTime)
 
 void MyEngine::GameObject::Render() const
 {
+	if (!m_IsActive)
+		return;
 	for (BaseComponent* pComp : m_Components)
 	{
 		pComp->Render();

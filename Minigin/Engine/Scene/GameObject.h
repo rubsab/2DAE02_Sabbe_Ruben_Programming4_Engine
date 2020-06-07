@@ -1,4 +1,6 @@
 #pragma once
+#include <glm/common.hpp>
+
 namespace MyEngine
 {
 	class BaseComponent;
@@ -23,7 +25,10 @@ namespace MyEngine
 		void SetState(int state) { m_State = state; }
 		int GetState() const { return m_State; }
 
-		GameObject();
+		void SetActive(bool isActive) { m_IsActive = isActive; }
+		bool IsActive() const { return m_IsActive; }
+
+		GameObject(const glm::fvec2& pos = { 0.0f, 0.0f }, const float angle = 0.0f);
 		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -33,5 +38,6 @@ namespace MyEngine
 	private:
 		std::vector<BaseComponent*> m_Components;
 		int m_State;
+		bool m_IsActive;
 	};
 }

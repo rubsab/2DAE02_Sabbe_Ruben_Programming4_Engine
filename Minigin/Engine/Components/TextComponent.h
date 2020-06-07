@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseComponent.h"
 #include "SDL_pixels.h"
+#include <glm\common.hpp>
 
 namespace MyEngine
 {
@@ -15,7 +16,7 @@ namespace MyEngine
 		virtual void FixedUpdate(const float fixedDeltaTime) override;
 		virtual void Render() const override;
 
-		TextComponent(const std::string& text, Font* font, SDL_Color color);
+		TextComponent(const std::string& text, Font* font, SDL_Color color, const glm::fvec2& pivot = { 0.5f, 0.5f }, const float angle = 0.0f);
 		~TextComponent();
 
 		//Getters & Setters
@@ -27,6 +28,8 @@ namespace MyEngine
 		Font* m_pFont;
 		Texture2D* m_pTexture;
 		SDL_Color m_Color;
+		float m_Angle;
+		glm::fvec2 m_Pivot;
 	};
 }
 

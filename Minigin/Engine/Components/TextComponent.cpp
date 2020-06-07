@@ -42,11 +42,14 @@ void MyEngine::TextComponent::Render() const
 	glm::vec2 pos{ m_pGameObject->GetComponent<TransformComponent>()->GetPosition() };
 	SDL_Rect dstRect{ static_cast<int>(pos.x), static_cast<int>(pos.y) };
 	SDL_QueryTexture(m_pTexture->GetSDLTexture(), nullptr, nullptr, &dstRect.w, &dstRect.h);
-	Renderer::GetInstance()->RenderTexture(*m_pTexture, &dstRect);
+	SDL_Point pivot = { int(m_Pivot.x * dstRect.w), int(m_Pivot.y * dstRect.h) };
+	dstRect.x += pivot.x;
+	dstRect.y += pivot.y;
+	Renderer::GetInstance()->RenderTexture(*m_pTexture, &dstRect, nullptr, m_Angle, pivot);
 }
 
-MyEngine::TextComponent::TextComponent(const std::string& text, Font* font, SDL_Color color)
-	: m_NeedsUpdate(true), m_Text(text), m_pFont(font), m_pTexture(nullptr), m_Color{ color }
+MyEngine::TextComponent::TextComponent(const std::string& text, Font* font, SDL_Color color, const glm::fvec2& pivot, const float angle)
+	: m_NeedsUpdate(true), m_Text(text), m_pFont(font), m_pTexture(nullptr), m_Color{ color }, m_Pivot{ pivot }, m_Angle{ angle }
 {
 	if (m_NeedsUpdate)
 	{

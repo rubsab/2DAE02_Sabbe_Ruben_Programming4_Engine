@@ -18,7 +18,7 @@ using namespace std;
 using namespace std::chrono;
 const float MyEngine::Minigin::SecPerFrame = 0.016f;
 
-void MyEngine::Minigin::Initialize(const std::string& dataPath)
+void MyEngine::Minigin::Initialize(const std::string& dataPath, const char* windowTitle, const int windowWidth, const int windowHeight)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
@@ -26,11 +26,11 @@ void MyEngine::Minigin::Initialize(const std::string& dataPath)
 	}
 
 	m_Window = SDL_CreateWindow(
-		"Programming 4 assignment",
+		windowTitle,
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		640,
-		480,
+		windowWidth,
+		windowHeight,
 		SDL_WINDOW_OPENGL
 	);
 	if (m_Window == nullptr)

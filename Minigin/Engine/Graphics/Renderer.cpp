@@ -31,7 +31,7 @@ void MyEngine::Renderer::Destroy()
 	}
 }
 
-void MyEngine::Renderer::RenderTexture(const Texture2D& texture, const SDL_Rect* dstRect, const SDL_Rect* srcRect) const
+void MyEngine::Renderer::RenderTexture(const Texture2D& texture, const SDL_Rect* dstRect, const SDL_Rect* srcRect, const float angle, const SDL_Point& pivot) const
 {
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), srcRect, dstRect);
+	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), srcRect, dstRect, angle, &pivot, SDL_RendererFlip::SDL_FLIP_NONE);
 }
