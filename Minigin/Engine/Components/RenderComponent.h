@@ -20,11 +20,9 @@ namespace MyEngine
 	{
 	public:
 		//Inherited
-		virtual void Update(const float deltaTime) override;
-		virtual void FixedUpdate(const float fixedDeltaTime) override;
-		virtual void Render() const override;
-
-		~RenderComponent();
+		void Update(const float deltaTime) override;
+		void FixedUpdate(const float fixedDeltaTime) override;
+		void Render() const override;
 
 		RenderComponent(const size_t maxAmountTextures = 1);
 		void AddTexture(const std::string& filePath, bool isAnimated = false, const int rows = 0, const int columns = 0, const float frameTime = 0.0f, const int drawWidth = 0.0f, const int drawHeight = 0.0f, const glm::fvec2& pivot = { 0.5f, 0.5f }, const int activeState = -1);

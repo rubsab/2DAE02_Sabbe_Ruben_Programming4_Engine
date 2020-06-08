@@ -5,12 +5,12 @@ namespace MyEngine
 	class Minigin
 	{
 	public:
-		void Initialize(const std::string& dataPath, const char* windowTitle, const int windowWidth, const int windowHeight);
+		void Initialize(const std::string& dataPath, const char* windowTitle, const int windowWidth, const int windowHeight, const float ppm);
 		void LoadGame() const;
 		void Cleanup();
 		void Run();
-	private:
 		static const float SecPerFrame; //0.016 for 60 fps, 0.033 for 30 fps
-		SDL_Window* m_Window{};
+	private:
+		SDL_Window* m_pWindow{};
 	};
 }

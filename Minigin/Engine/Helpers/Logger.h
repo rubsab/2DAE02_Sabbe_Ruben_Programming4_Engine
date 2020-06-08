@@ -13,7 +13,7 @@ namespace MyEngine
 	class Logger final : public Singleton<Logger>
 	{
 	public:
-		void Initialize();
+		void Init();
 		void Log(LogLevel level , const std::string& message) const;
 		void LogInfo(const std::string& message) const;
 		void LogWarning(const std::string& message) const;

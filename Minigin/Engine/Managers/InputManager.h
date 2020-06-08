@@ -4,6 +4,8 @@
 #include <map>
 #include <functional>
 
+struct SDL_Window;
+
 namespace MyEngine
 {
 	class GameObject;
@@ -30,7 +32,9 @@ namespace MyEngine
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
+		InputManager() = default;
 		~InputManager();
+		void Init(SDL_Window* pWindow);
 		bool ProcessSDLEvents() const;
 		void ProcessInput();
 		bool IsButtonState(const int buttonCode, const Hardware& hardWare, const ButtonState& buttonState);
@@ -45,6 +49,8 @@ namespace MyEngine
 		void AddCommand(std::map<const int, std::vector<const Command*>>& mappings, const int buttonCode, const Command* command);
 		std::map<const int, std::vector<const Command*>> m_ControllerMappings, m_KeyBoardMappings, m_MouseMappings;
 		std::map<const int, ButtonState> m_ControllerStates, m_KeyBoardStates, m_MouseStates;
+
+		SDL_Window* m_pWindow = nullptr;
 	};
 
 }

@@ -250,6 +250,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x64\*.dll" "$(OutputPath)" /R /Y</C
     <ClInclude Include="Engine\Helpers\Logger.h" />
     <ClInclude Include="Engine\Managers\SoundManager.h" />
     <ClInclude Include="Engine\Helpers\Sound.h" />
+    <ClInclude Include="Engine\Managers\PhysicsManager.h" />
+    <ClInclude Include="Engine\Components\PhysicsComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Graphics\Font.cpp" />
@@ -276,6 +278,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x64\*.dll" "$(OutputPath)" /R /Y</C
     <ClCompile Include="Engine\Helpers\Logger.cpp" />
     <ClCompile Include="Engine\Managers\SoundManager.cpp" />
     <ClCompile Include="Engine\Helpers\Sound.cpp" />
+    <ClCompile Include="Engine\Managers\PhysicsManager.cpp" />
+    <ClCompile Include="Engine\Components\PhysicsComponent.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

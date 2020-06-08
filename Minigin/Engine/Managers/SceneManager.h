@@ -7,6 +7,7 @@ namespace MyEngine
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
+		SceneManager() = default;
 		Scene& CreateScene(const std::string& name);
 		~SceneManager();
 
@@ -14,8 +15,6 @@ namespace MyEngine
 		void FixedUpdate(const float fixedDeltaTime);
 		void Render();
 	private:
-		friend class Singleton<SceneManager>;
-		SceneManager() = default;
 		std::vector<Scene*> m_Scenes;
 	};
 }

@@ -25,6 +25,11 @@ MyEngine::InputManager::~InputManager()
 	}
 }
 
+void MyEngine::InputManager::Init(SDL_Window* pWindow)
+{
+	m_pWindow = pWindow;
+}
+
 bool MyEngine::InputManager::ProcessSDLEvents() const
 {
 	SDL_Event e;
@@ -38,6 +43,8 @@ bool MyEngine::InputManager::ProcessSDLEvents() const
 
 void MyEngine::InputManager::ProcessInput()
 {
+	if (!(SDL_GetWindowFlags(m_pWindow) & (SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS)))
+		return;
 	UpdateStates(Hardware::KeyBoard);
 	ExecuteCommands(Hardware::KeyBoard, m_KeyBoardMappings);
 	UpdateStates(Hardware::Controller);

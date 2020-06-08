@@ -6,9 +6,9 @@ namespace MyEngine
 	{
 	public:
 		//Inherited
-		virtual void Update(const float deltaTime) override;
-		virtual void FixedUpdate(const float fixedDeltaTime) override;
-		virtual void Render() const override;
+		void Update(const float deltaTime) override;
+		void FixedUpdate(const float fixedDeltaTime) override;
+		void Render() const override;
 
 	private:
 		float m_DeltaTime;

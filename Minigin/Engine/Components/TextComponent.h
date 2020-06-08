@@ -12,12 +12,11 @@ namespace MyEngine
 	{
 	public:
 		//Inherited
-		virtual void Update(const float deltaTime) override;
-		virtual void FixedUpdate(const float fixedDeltaTime) override;
-		virtual void Render() const override;
+		void Update(const float deltaTime) override;
+		void FixedUpdate(const float fixedDeltaTime) override;
+		void Render() const override;
 
 		TextComponent(const std::string& text, Font* font, SDL_Color color, const glm::fvec2& pivot = { 0.5f, 0.5f }, const float angle = 0.0f);
-		~TextComponent();
 
 		//Getters & Setters
 		Texture2D* GetTexture() const;

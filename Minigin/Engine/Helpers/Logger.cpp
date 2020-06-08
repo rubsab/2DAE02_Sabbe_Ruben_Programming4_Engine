@@ -3,7 +3,7 @@
 #include <consoleapi2.h>
 #include <processenv.h>
 
-void MyEngine::Logger::Initialize()
+void MyEngine::Logger::Init()
 {
 	//Source for this initialize: OverlordEngine
 #if defined(DEBUG) | defined(_DEBUG)

@@ -53,21 +53,17 @@ void MyEngine::RenderComponent::Render() const
 				DimensionsSet(i, dstRect);
 				SDL_Point pivot = { int(m_Textures[i].Pivot.x * dstRect.w), int(m_Textures[i].Pivot.y * dstRect.h) };
 				dstRect.x -= pivot.x;
-				dstRect.y -= pivot.y;
+				dstRect.y += pivot.y;
 				Renderer::GetInstance()->RenderTexture(*m_Textures[i].Texture, &dstRect, &srcRect, m_pGameObject->GetComponent<TransformComponent>()->GetRotation(), pivot);
 				continue;
 			}
 			DimensionsSet(i, dstRect);
 			SDL_Point pivot = { int(m_Textures[i].Pivot.x * dstRect.w), int(m_Textures[i].Pivot.y * dstRect.h) };
 			dstRect.x -= pivot.x;
-			dstRect.y -= pivot.y;
+			dstRect.y += pivot.y;
 			Renderer::GetInstance()->RenderTexture(*m_Textures[i].Texture, &dstRect, nullptr, m_pGameObject->GetComponent<TransformComponent>()->GetRotation(), pivot);
 		}
 	}
-}
-
-MyEngine::RenderComponent::~RenderComponent()
-{
 }
 
 MyEngine::RenderComponent::RenderComponent(const size_t maxAmountTextures)

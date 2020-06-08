@@ -71,10 +71,6 @@ MyEngine::TextComponent::TextComponent(const std::string& text, Font* font, SDL_
 	}
 }
 
-MyEngine::TextComponent::~TextComponent()
-{
-}
-
 MyEngine::Texture2D* MyEngine::TextComponent::GetTexture() const
 {
 	return m_pTexture;
