@@ -16,7 +16,7 @@ public:
 
 		if (!std::regex_match(path, fileExtensionRegex))
 		{
-			MyEngine::Logger::GetInstance()->LogError("File [" + path + "] is not a .dat extension");
+			MyEngine::Logger::LogError("File [" + path + "] is not a .dat extension");
 			return;
 		}
 
@@ -24,7 +24,7 @@ public:
 
 		if (!file.is_open())
 		{
-			MyEngine::Logger::GetInstance()->LogError("File [" + path + "] could not be opened");
+			MyEngine::Logger::LogError("File [" + path + "] could not be opened");
 			return;
 		}
 

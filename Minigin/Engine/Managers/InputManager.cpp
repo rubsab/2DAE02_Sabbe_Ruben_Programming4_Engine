@@ -166,7 +166,7 @@ void MyEngine::InputManager::AddCommand(std::map<const int, std::vector<const Co
 	{
 		if (pCommand == command)
 		{
-			Logger::GetInstance()->LogWarning("Command already added to button");
+			Logger::LogWarning("Command already added to button");
 			return;
 		}
 	}

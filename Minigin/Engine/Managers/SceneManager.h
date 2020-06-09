@@ -8,13 +8,16 @@ namespace MyEngine
 	{
 	public:
 		SceneManager() = default;
-		Scene& CreateScene(const std::string& name);
+		void AddScene(Scene* pScene);
+		Scene* RemoveScene(const std::string& name);
+		void SetSceneActive(const std::string& name);
 		~SceneManager();
 
 		void Update(const float deltaTime);
 		void FixedUpdate(const float fixedDeltaTime);
-		void Render();
+		void Render() const;
 	private:
 		std::vector<Scene*> m_Scenes;
+		int m_ActiveScene{ -1 };
 	};
 }

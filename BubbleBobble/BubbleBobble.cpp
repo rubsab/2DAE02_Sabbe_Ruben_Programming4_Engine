@@ -50,7 +50,8 @@ private:
 void LoadScene()
 {
 	using namespace MyEngine;
-	auto& scene = SceneManager::GetInstance()->CreateScene("Demo");
+	Scene* scene = new Scene("Demo");
+	SceneManager::GetInstance()->AddScene(scene);
 
 	enum States : int
 	{
@@ -62,7 +63,7 @@ void LoadScene()
 	go->SetState(States::IDLE);
 	go->AddComponent(new RenderComponent());
 	go->GetComponent<RenderComponent>()->AddTexture("background.jpg", false, 0, 0, 0.0f, 0, 0, { 0.5f, 0.5f }, States::IDLE);
-	scene.Add(go);
+	scene->Add(go);
 
 	SoundEffect* sound = SoundManager::GetInstance()->LoadSoundEffect("GunShot.wav");
 	MyEngine::InputManager::GetInstance()->AddCommand(VK_LBUTTON, MyEngine::Hardware::Mouse, new MyEngine::Command{ [sound]() { sound->Play(0); }, MyEngine::ButtonState::Pressed });
@@ -70,28 +71,28 @@ void LoadScene()
 	go = new GameObject({ 320.0f, 200.0f });
 	go->AddComponent(new RenderComponent());
 	go->GetComponent<RenderComponent>()->AddTexture("logo.png", true, 1, 3, 1.0f, 50, 50);
-	scene.Add(go);
+	scene->Add(go);
 
 	GameObject* testGo = new GameObject();
 	testGo->AddComponent(new RenderComponent());
 	testGo->GetComponent<RenderComponent>()->AddTexture("logo.png", false, 0, 0, 0.0f, 150, 50);
-	testGo->AddComponent(new PhysicsComponent(MyEngine::PhysicsComponent::PhysicsType::Dynamic, 300.0f, 300.0f, 45.0f, 75.0f, 25.0f, 1.0f, 0.3f, 0.2f, 0x0001));
+	testGo->AddComponent(new PhysicsComponent(MyEngine::PhysicsComponent::PhysicsType::Dynamic, 300.0f, 300.0f, 45.0f, 75.0f, 25.0f, 1.0f, 0.3f, 0.0f));
 	//testGo->GetComponent<PhysicsComponent>()->SetTrigger(true);
-	scene.Add(testGo);
+	scene->Add(testGo);
 
 	go = new GameObject();
 	go->AddComponent(new RenderComponent());
 	go->GetComponent<RenderComponent>()->AddTexture("logo.png", false, 0, 0, 0.0f, 150, 50);
-	go->AddComponent(new PhysicsComponent(MyEngine::PhysicsComponent::PhysicsType::Kinematic, 300.0f, 10.0f, 0.0f, 75.0f, 25.0f, 1.0f, 0.3f, 0.2f, 0x0001));
+	go->AddComponent(new PhysicsComponent(MyEngine::PhysicsComponent::PhysicsType::Kinematic, 300.0f, 10.0f, 0.0f, 75.0f, 25.0f, 1.0f, 0.3f, 0.0f));
 	go->AddComponent(new TestComponent(testGo));
-	scene.Add(go);
+	scene->Add(go);
 
 	go = new GameObject({ 80.0f, 480.0f });
 	go->AddComponent(new TextComponent("Programming 4 Assignment", ResourceManager::GetInstance()->LoadFont("Lingua.otf", 36), { 255, 255, 255 }, { 0.0f, 0.0f }));
-	scene.Add(go);
+	scene->Add(go);
 	
 	go = new GameObject({ 0.0f, 500.0f });
 	go->AddComponent(new TextComponent(" ", ResourceManager::GetInstance()->LoadFont("Lingua.otf", 36), { 255, 255, 0 }, { 0.0f, 0.0f }));
 	go->AddComponent(new FPSComponent());
-	scene.Add(go);
+	scene->Add(go);
 }

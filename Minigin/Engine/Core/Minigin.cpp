@@ -39,7 +39,7 @@ void MyEngine::Minigin::Initialize(const std::string& dataPath, const char* wind
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
 	Renderer::GetInstance()->Init(m_pWindow, { 0, 0, 0, 255 });
-	Logger::GetInstance()->Init();
+	Logger::Init();
 	InputManager::GetInstance()->Init(m_pWindow);
 	ResourceManager::GetInstance()->Init(dataPath + "Images/");
 	SoundManager::GetInstance()->Init(dataPath + "Sound/");
@@ -63,7 +63,6 @@ void MyEngine::Minigin::Cleanup()
 	ResourceManager::Release();
 	SoundManager::Release();
 	PhysicsManager::Release();
-	Logger::Release();
 	m_pWindow = nullptr;
 	SDL_Quit();
 }

@@ -3,12 +3,15 @@
 #include <consoleapi2.h>
 #include <processenv.h>
 
+bool MyEngine::Logger::m_IsInitialized = false;
+HANDLE MyEngine::Logger::m_ConsoleHandle = {};
+
 void MyEngine::Logger::Init()
 {
 	//Source for this initialize: OverlordEngine
 #if defined(DEBUG) | defined(_DEBUG)
 	//Create Console Window
-	if (AllocConsole())
+	if (AllocConsole() && !m_IsInitialized)
 	{
 		//Redirect std in, err and out to this console window
 		FILE* pCout;
@@ -34,11 +37,13 @@ void MyEngine::Logger::Init()
 			HMENU hMenu = GetSystemMenu(hwnd, FALSE);
 			if (hMenu != NULL) DeleteMenu(hMenu, SC_CLOSE, MF_BYCOMMAND);
 		}
+
+		m_IsInitialized = true;
 	}
 #endif
 }
 
-void MyEngine::Logger::Log(LogLevel level, const std::string& message) const
+void MyEngine::Logger::Log(LogLevel level, const std::string& message)
 {
 	switch (level)
 	{
@@ -57,21 +62,21 @@ void MyEngine::Logger::Log(LogLevel level, const std::string& message) const
 	}
 }
 
-void MyEngine::Logger::LogInfo(const std::string& message) const
+void MyEngine::Logger::LogInfo(const std::string& message)
 {
 	SetConsoleTextAttribute(m_ConsoleHandle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
 	std::cout << "[INFO] : " << message << std::endl;
 	std::cout.flush();
 }
 
-void MyEngine::Logger::LogWarning(const std::string& message) const
+void MyEngine::Logger::LogWarning(const std::string& message)
 {
 	SetConsoleTextAttribute(m_ConsoleHandle, FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN);
 	std::cout << "[WARNING] : " << message << std::endl;
 	std::cout.flush();
 }
 
-void MyEngine::Logger::LogError(const std::string& message) const
+void MyEngine::Logger::LogError(const std::string& message)
 {
 	SetConsoleTextAttribute(m_ConsoleHandle, FOREGROUND_INTENSITY | FOREGROUND_RED);
 	std::cout << "[ERROR] : " << message << std::endl;

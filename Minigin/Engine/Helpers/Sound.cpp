@@ -8,7 +8,7 @@ MyEngine::SoundEffect::SoundEffect(const  std::string& path)
 	m_Path(path)
 {
 	if (m_pMixChunk == nullptr)
-		Logger::GetInstance()->LogError("SoundEffect: Failed to load " + path + ",\nSDL_mixer Error: " + Mix_GetError());
+		Logger::LogError("SoundEffect: Failed to load " + path + ",\nSDL_mixer Error: " + Mix_GetError());
 }
 MyEngine::SoundEffect::~SoundEffect()
 {
@@ -68,7 +68,7 @@ MyEngine::SoundStream::SoundStream(const std::string& path)
 	m_Path(path)
 {
 	if (m_pMixMusic == nullptr)
-		Logger::GetInstance()->LogError("SoundStream: Failed to load " + path + ",\nSDL_mixer Error: " + Mix_GetError());
+		Logger::LogError("SoundStream: Failed to load " + path + ",\nSDL_mixer Error: " + Mix_GetError());
 }
 
 MyEngine::SoundStream::~SoundStream()

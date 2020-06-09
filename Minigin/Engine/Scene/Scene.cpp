@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "GameObject.h"
 #include "../Managers/InputManager.h"
+#include <algorithm>
 
 using namespace MyEngine;
 
@@ -11,39 +12,42 @@ Scene::Scene(const std::string& name) : m_Name(name) {}
 
 Scene::~Scene()
 {
-	for (GameObject* pGameObj : m_Objects)
+	for (const std::pair<GameObject*, float>& pair : m_Objects)
 	{
-		delete pGameObj;
-		pGameObj = nullptr;
+		delete pair.first;
 	}
 }
 
-void Scene::Add(GameObject* pObject)
+void Scene::Add(GameObject* pObject, float depth)
 {
-	m_Objects.push_back(pObject);
+	m_Objects.push_back({ pObject, depth });
+	std::sort(m_Objects.begin(), m_Objects.end(), [](std::pair<GameObject*, float> a, std::pair<GameObject*, float> b) {return a.second > b.second; });
 }
 
-void Scene::Update(const float deltaTime)
+void MyEngine::Scene::BaseUpdate(const float deltaTime)
 {
-	for(GameObject* pGameObj : m_Objects)
+	for (const std::pair<GameObject*, float>& pair : m_Objects)
 	{
-		pGameObj->Update(deltaTime);
+		pair.first->Update(deltaTime);
 	}
+	Update(deltaTime);
 }
 
-void MyEngine::Scene::FixedUpdate(const float fixedDeltaTime)
+void MyEngine::Scene::BaseFixedUpdate(const float fixedDeltaTime)
 {
-	for (GameObject* pGameObj : m_Objects)
+	for (const std::pair<GameObject*, float>& pair : m_Objects)
 	{
-		pGameObj->FixedUpdate(fixedDeltaTime);
+		pair.first->FixedUpdate(fixedDeltaTime);
 	}
+	FixedUpdate(fixedDeltaTime);
 }
 
-void Scene::Render() const
+void MyEngine::Scene::BaseRender() const
 {
-	for (const GameObject* pGameObj : m_Objects)
+	for (const std::pair<GameObject*, float>& pair : m_Objects)
 	{
-		pGameObj->Render();
+		pair.first->Render();
 	}
+	Render();
 }
 

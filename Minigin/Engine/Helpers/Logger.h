@@ -1,5 +1,4 @@
 #pragma once
-#include "Singleton.h"
 #include <iostream>
 namespace MyEngine
 {
@@ -10,15 +9,16 @@ namespace MyEngine
 		Error
 	};
 
-	class Logger final : public Singleton<Logger>
+	class Logger final
 	{
 	public:
-		void Init();
-		void Log(LogLevel level , const std::string& message) const;
-		void LogInfo(const std::string& message) const;
-		void LogWarning(const std::string& message) const;
-		void LogError(const std::string& message) const;
+		static void Init();
+		static void Log(LogLevel level , const std::string& message);
+		static void LogInfo(const std::string& message);
+		static void LogWarning(const std::string& message);
+		static void LogError(const std::string& message);
 	private:
-		HANDLE m_ConsoleHandle;
+		static HANDLE m_ConsoleHandle;
+		static bool m_IsInitialized;
 	};
 }

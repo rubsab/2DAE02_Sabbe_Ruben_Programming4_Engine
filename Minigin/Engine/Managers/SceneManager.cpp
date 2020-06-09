@@ -1,36 +1,67 @@
 #include "MiniginPCH.h"
 #include "SceneManager.h"
 #include "../Scene/Scene.h"
+#include "../Helpers/Logger.h"
+#include <algorithm>
 
 void MyEngine::SceneManager::Update(const float deltaTime)
 {
-	for(Scene* pScene : m_Scenes)
-	{
-		pScene->Update(deltaTime);
-	}
+	if (m_ActiveScene >= 0)
+		m_Scenes[m_ActiveScene]->BaseUpdate(deltaTime);
 }
 
 void MyEngine::SceneManager::FixedUpdate(const float fixedDeltaTime)
 {
-	for (Scene* pScene : m_Scenes)
-	{
-		pScene->FixedUpdate(fixedDeltaTime);
-	}
+	if (m_ActiveScene >= 0)
+		m_Scenes[m_ActiveScene]->BaseFixedUpdate(fixedDeltaTime);
 }
 
-void MyEngine::SceneManager::Render()
+void MyEngine::SceneManager::Render() const
 {
-	for (const Scene* pScene : m_Scenes)
-	{
-		pScene->Render();
-	}
+	if (m_ActiveScene >= 0)
+		m_Scenes[m_ActiveScene]->BaseRender();
 }
 
-MyEngine::Scene& MyEngine::SceneManager::CreateScene(const std::string& name)
+void MyEngine::SceneManager::AddScene(Scene* pScene)
 {
-	Scene* scene = new Scene(name);
-	m_Scenes.push_back(scene);
-	return *scene;
+	if (std::find(m_Scenes.begin(), m_Scenes.end(), pScene) == m_Scenes.end())
+	{
+		m_Scenes.push_back(pScene);
+		if (m_ActiveScene == -1)
+			m_ActiveScene = 0;
+		return;
+	}
+	Logger::LogWarning("Scene does already exist in the SceneManager");
+}
+
+MyEngine::Scene* MyEngine::SceneManager::RemoveScene(const std::string& name)
+{
+	const std::vector<Scene*>::iterator it = std::find_if(m_Scenes.begin(), m_Scenes.end(), [name](Scene* scene) {return scene->GetName() == name; });
+	if (it != m_Scenes.end())
+	{
+		if (it - m_Scenes.begin() == 0)
+		{
+			Logger::LogWarning("Scene with name '" + name + "' is currently active");
+			return nullptr;
+		}
+		m_Scenes.erase(it);
+		return *it;
+	}
+	Logger::LogWarning("Scene with name '" + name + "' does not exist");
+	return nullptr;
+}
+
+void MyEngine::SceneManager::SetSceneActive(const std::string& name)
+{
+	const std::vector<Scene*>::iterator it = std::find_if(m_Scenes.begin(), m_Scenes.end(), [name](Scene* scene) {return scene->GetName() == name; });
+	if (it != m_Scenes.end())
+	{
+		m_Scenes[m_ActiveScene]->OnDeactivate();
+		m_ActiveScene = int(it - m_Scenes.begin());
+		m_Scenes[m_ActiveScene]->OnActivate();
+		return;
+	}
+	Logger::LogWarning("Scene with name '" + name + "' does not exist");
 }
 
 MyEngine::SceneManager::~SceneManager()
