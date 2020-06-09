@@ -17,9 +17,7 @@ MyEngine::GameObject::GameObject(const glm::fvec2& pos, const float angle):
 MyEngine::GameObject::~GameObject()
 {
 	for (BaseComponent* pComp : m_Components)
-	{
-		delete pComp;
-	}
+		Safe_Delete(pComp);
 }
 
 void MyEngine::GameObject::Update(const float deltaTime)
@@ -27,9 +25,7 @@ void MyEngine::GameObject::Update(const float deltaTime)
 	if (!m_IsActive)
 		return;
 	for (BaseComponent* pComp : m_Components)
-	{
 		pComp->Update(deltaTime);
-	}
 }
 
 void MyEngine::GameObject::FixedUpdate(const float fixedDeltaTime)
@@ -37,9 +33,7 @@ void MyEngine::GameObject::FixedUpdate(const float fixedDeltaTime)
 	if (!m_IsActive)
 		return;
 	for (BaseComponent* pComp : m_Components)
-	{
 		pComp->FixedUpdate(fixedDeltaTime);
-	}
 }
 
 void MyEngine::GameObject::Render() const
@@ -47,9 +41,7 @@ void MyEngine::GameObject::Render() const
 	if (!m_IsActive)
 		return;
 	for (BaseComponent* pComp : m_Components)
-	{
 		pComp->Render();
-	}
 }
 
 void MyEngine::GameObject::AddComponent(BaseComponent* pComponent)

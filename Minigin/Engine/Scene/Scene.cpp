@@ -13,9 +13,7 @@ Scene::Scene(const std::string& name) : m_Name(name) {}
 Scene::~Scene()
 {
 	for (const std::pair<GameObject*, float>& pair : m_Objects)
-	{
-		delete pair.first;
-	}
+		Safe_Delete(pair.first);
 }
 
 void Scene::Add(GameObject* pObject, float depth)
@@ -27,27 +25,21 @@ void Scene::Add(GameObject* pObject, float depth)
 void MyEngine::Scene::BaseUpdate(const float deltaTime)
 {
 	for (const std::pair<GameObject*, float>& pair : m_Objects)
-	{
 		pair.first->Update(deltaTime);
-	}
 	Update(deltaTime);
 }
 
 void MyEngine::Scene::BaseFixedUpdate(const float fixedDeltaTime)
 {
 	for (const std::pair<GameObject*, float>& pair : m_Objects)
-	{
 		pair.first->FixedUpdate(fixedDeltaTime);
-	}
 	FixedUpdate(fixedDeltaTime);
 }
 
 void MyEngine::Scene::BaseRender() const
 {
 	for (const std::pair<GameObject*, float>& pair : m_Objects)
-	{
 		pair.first->Render();
-	}
 	Render();
 }
 

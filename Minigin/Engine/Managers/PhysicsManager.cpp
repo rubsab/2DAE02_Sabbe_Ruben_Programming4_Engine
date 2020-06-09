@@ -4,7 +4,7 @@
 
 MyEngine::PhysicsManager::~PhysicsManager()
 {
-	delete m_pWorld;
+	Safe_Delete(m_pWorld);
 }
 
 void MyEngine::PhysicsManager::Init(const b2Vec2& gravity, const int32 nrVelocityIterations, const int32 nrPositionIterations, const float ppm, const SDL_Color& debugColor)

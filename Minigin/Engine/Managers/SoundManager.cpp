@@ -18,9 +18,9 @@ void MyEngine::SoundManager::Init(const std::string& data)
 MyEngine::SoundManager::~SoundManager()
 {
 	for (const SoundEffect* soundEffect : m_SoundEffects)
-		delete soundEffect;
+		Safe_Delete(soundEffect);
 	for (const SoundStream* soundStream : m_SoundStreams)
-		delete soundStream;
+		Safe_Delete(soundStream);
 }
 
 MyEngine::SoundEffect* MyEngine::SoundManager::LoadSoundEffect(const std::string& file)

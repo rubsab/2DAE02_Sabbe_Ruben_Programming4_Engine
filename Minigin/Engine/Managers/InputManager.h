@@ -37,18 +37,18 @@ namespace MyEngine
 		void Init(SDL_Window* pWindow);
 		bool ProcessSDLEvents() const;
 		void ProcessInput();
-		bool IsButtonState(const int buttonCode, const Hardware& hardWare, const ButtonState& buttonState);
-		bool IsPressed(const int buttonCode, const Hardware& hardWare);
-		bool IsDown(const int buttonCode, const Hardware& hardWare);
-		bool IsReleased(const int buttonCode, const Hardware& hardWare);
-		void AddCommand(const int buttonCode, const Hardware& hardWare, const Command* command);
+		bool IsButtonState(const int buttonCode, const Hardware& hardWare, const ButtonState& buttonState, const int id = 0);
+		bool IsPressed(const int buttonCode, const Hardware& hardWare, const int id = 0);
+		bool IsDown(const int buttonCode, const Hardware& hardWare, const int id = 0);
+		bool IsReleased(const int buttonCode, const Hardware& hardWare, const int id = 0);
+		void AddCommand(const int buttonCode, const Hardware& hardWare, const Command* command, const int id = 0);
 	private:
 		void UpdateStates(const Hardware& hardWare);
-		void UpdateState(const bool down, std::pair<const int, ButtonState>& button);
-		void ExecuteCommands(const Hardware& hardWare, const std::map<const int, std::vector<const Command*>>& mappings);
-		void AddCommand(std::map<const int, std::vector<const Command*>>& mappings, const int buttonCode, const Command* command);
-		std::map<const int, std::vector<const Command*>> m_ControllerMappings, m_KeyBoardMappings, m_MouseMappings;
-		std::map<const int, ButtonState> m_ControllerStates, m_KeyBoardStates, m_MouseStates;
+		void UpdateState(const bool down, std::pair<const std::pair<const int, const int>, ButtonState>& button);
+		void ExecuteCommands(const Hardware& hardWare, const std::map<std::pair<const int, const int>, std::vector<const Command*>>& mappings);
+		void AddCommand(std::map<std::pair<const int, const int>, std::vector<const Command*>>& mappings, const int buttonCode, const Command* command, const int id);
+		std::map<std::pair<const int, const int>, std::vector<const Command*>> m_ControllerMappings, m_KeyBoardMappings, m_MouseMappings;
+		std::map<std::pair<const int, const int>, ButtonState> m_ControllerStates, m_KeyBoardStates, m_MouseStates;
 
 		SDL_Window* m_pWindow = nullptr;
 	};

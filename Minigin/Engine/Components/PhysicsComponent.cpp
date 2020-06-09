@@ -25,7 +25,6 @@ MyEngine::PhysicsComponent::PhysicsComponent(const PhysicsType physicsType, cons
 	fixtureDef.filter.categoryBits = categoryBits;
 	fixtureDef.filter.maskBits = unsigned short(~maskBits);
 	m_pBody->CreateFixture(&fixtureDef);
-	m_IsTrigger = false;
 }
 
 void MyEngine::PhysicsComponent::Update(const float)
@@ -55,34 +54,7 @@ void MyEngine::PhysicsComponent::Render() const
 	Renderer::GetInstance()->RenderLine({ int(m_pBody->GetWorldPoint(shape->m_vertices[0]).x * PhysicsManager::GetInstance()->GetPixelsPerMeter()), int(m_pBody->GetWorldPoint(shape->m_vertices[0]).y * PhysicsManager::GetInstance()->GetPixelsPerMeter()) }, { int(m_pBody->GetWorldPoint(shape->m_vertices[shape->m_count - 1]).x * PhysicsManager::GetInstance()->GetPixelsPerMeter()), int(m_pBody->GetWorldPoint(shape->m_vertices[shape->m_count - 1]).y * PhysicsManager::GetInstance()->GetPixelsPerMeter()) }, { int(m_pBody->GetPosition().x * PhysicsManager::GetInstance()->GetPixelsPerMeter()), int(m_pBody->GetPosition().y * PhysicsManager::GetInstance()->GetPixelsPerMeter()) }, PhysicsManager::GetInstance()->GetDebugColor());
 }
 
-void MyEngine::PhysicsComponent::SetTrigger(bool isTrigger)
-{
-	if (m_IsTrigger == isTrigger)
-		return;
-
-	m_IsTrigger = isTrigger;
-
-	if (m_IsTrigger)
-	{
-		m_OldMaskBits = m_pBody->GetFixtureList()[0].GetFilterData().maskBits;
-		b2Filter newFilter;
-		newFilter.categoryBits = m_pBody->GetFixtureList()[0].GetFilterData().categoryBits;
-		newFilter.maskBits = 0x0000;
-		newFilter.groupIndex = m_pBody->GetFixtureList()[0].GetFilterData().groupIndex;
-		m_pBody->GetFixtureList()[0].SetFilterData(newFilter);
-		return;
-	}
-
-	b2Filter newFilter;
-	newFilter.categoryBits = m_pBody->GetFixtureList()[0].GetFilterData().categoryBits;
-	newFilter.maskBits = m_OldMaskBits;
-	newFilter.groupIndex = m_pBody->GetFixtureList()[0].GetFilterData().groupIndex;
-	m_pBody->GetFixtureList()[0].SetFilterData(newFilter);
-}
-
 bool MyEngine::PhysicsComponent::IsOverlapping(const PhysicsComponent* other) const
 {
-	if (m_IsTrigger || other->m_IsTrigger)
-		return b2TestOverlap(m_pBody->GetFixtureList()[0].GetShape(), 0, other->m_pBody->GetFixtureList()[0].GetShape(), 0, m_pBody->GetTransform(), other->m_pBody->GetTransform());
-	return false;
+	return b2TestOverlap(m_pBody->GetFixtureList()[0].GetShape(), 0, other->m_pBody->GetFixtureList()[0].GetShape(), 0, m_pBody->GetTransform(), other->m_pBody->GetTransform());
 }

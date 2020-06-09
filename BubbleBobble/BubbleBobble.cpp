@@ -18,7 +18,7 @@ int main(int, char* []) {
 	MyEngine::Minigin engine;
 	engine.Initialize("../Resources/", "Programming 4 assignment", 640, 500, 20.0f);
 	std::vector<Level> levels;
-	LevelDataParser::ParseFile("../Resources/BBSprites/FixedLevelData.dat", levels);
+	LevelDataParser::ParseFile("../Resources/BBSprites/SeparatedLevelData.dat", "../Resources/BBSprites/SeparatedEnemyData.dat", levels);
 	MyEngine::PhysicsManager::GetInstance()->EnableDebugDrawing(true);
 	LoadScene();
 	engine.Run();
@@ -66,7 +66,8 @@ void LoadScene()
 	scene->Add(go);
 
 	SoundEffect* sound = SoundManager::GetInstance()->LoadSoundEffect("GunShot.wav");
-	MyEngine::InputManager::GetInstance()->AddCommand(VK_LBUTTON, MyEngine::Hardware::Mouse, new MyEngine::Command{ [sound]() { sound->Play(0); }, MyEngine::ButtonState::Pressed });
+	MyEngine::InputManager::GetInstance()->AddCommand(XINPUT_GAMEPAD_A, MyEngine::Hardware::Controller, new MyEngine::Command{ [sound]() { sound->Play(0); }, MyEngine::ButtonState::Pressed }, 0);
+	MyEngine::InputManager::GetInstance()->AddCommand(VK_LBUTTON, MyEngine::Hardware::Mouse, new MyEngine::Command{ [sound]() { sound->Play(0); }, MyEngine::ButtonState::Pressed }, 0);
 
 	go = new GameObject({ 320.0f, 200.0f });
 	go->AddComponent(new RenderComponent());
@@ -77,7 +78,6 @@ void LoadScene()
 	testGo->AddComponent(new RenderComponent());
 	testGo->GetComponent<RenderComponent>()->AddTexture("logo.png", false, 0, 0, 0.0f, 150, 50);
 	testGo->AddComponent(new PhysicsComponent(MyEngine::PhysicsComponent::PhysicsType::Dynamic, 300.0f, 300.0f, 45.0f, 75.0f, 25.0f, 1.0f, 0.3f, 0.0f));
-	//testGo->GetComponent<PhysicsComponent>()->SetTrigger(true);
 	scene->Add(testGo);
 
 	go = new GameObject();

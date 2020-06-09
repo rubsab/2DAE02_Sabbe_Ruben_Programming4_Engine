@@ -68,7 +68,6 @@ MyEngine::SceneManager::~SceneManager()
 {
 	for (Scene* pScene : m_Scenes)
 	{
-		delete pScene;
-		pScene = nullptr;
+		Safe_Delete(pScene);
 	}
 }
