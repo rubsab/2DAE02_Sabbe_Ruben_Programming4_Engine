@@ -14,12 +14,23 @@ void MyEngine::SceneManager::FixedUpdate(const float fixedDeltaTime)
 {
 	if (m_ActiveScene >= 0)
 		m_Scenes[m_ActiveScene]->BaseFixedUpdate(fixedDeltaTime);
+	DeleteToDeletes();
 }
 
 void MyEngine::SceneManager::Render() const
 {
 	if (m_ActiveScene >= 0)
 		m_Scenes[m_ActiveScene]->BaseRender();
+}
+
+void MyEngine::SceneManager::DeleteToDeletes()
+{
+	for (std::string& toDelete : m_ToDelete)
+	{
+		MyEngine::Scene* scene = RemoveScene(toDelete);
+		Safe_Delete(scene);
+	}
+	m_ToDelete.clear();
 }
 
 void MyEngine::SceneManager::AddScene(Scene* pScene)
@@ -56,9 +67,9 @@ void MyEngine::SceneManager::SetSceneActive(const std::string& name)
 	const std::vector<Scene*>::iterator it = std::find_if(m_Scenes.begin(), m_Scenes.end(), [name](Scene* scene) {return scene->GetName() == name; });
 	if (it != m_Scenes.end())
 	{
-		m_Scenes[m_ActiveScene]->OnDeactivate();
+		if (m_Scenes[m_ActiveScene]->GetShouldRemove())
+			m_ToDelete.push_back(m_Scenes[m_ActiveScene]->GetName());
 		m_ActiveScene = int(it - m_Scenes.begin());
-		m_Scenes[m_ActiveScene]->OnActivate();
 		return;
 	}
 	Logger::LogWarning("Scene with name '" + name + "' does not exist");

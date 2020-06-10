@@ -11,11 +11,11 @@
 
 MyEngine::ResourceManager::~ResourceManager()
 {
-	for (const IndexedTexture& texture : m_Textures)
+	for (IndexedTexture& texture : m_Textures)
 	{
 		Safe_Delete(texture.Texture);
 	}
-	for (const IndexedFont& font : m_Fonts)
+	for (IndexedFont& font : m_Fonts)
 	{
 		Safe_Delete(font.Font);
 	}

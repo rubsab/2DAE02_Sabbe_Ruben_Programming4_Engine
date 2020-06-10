@@ -19,5 +19,8 @@ namespace MyEngine
 	private:
 		std::vector<Scene*> m_Scenes;
 		int m_ActiveScene{ -1 };
+		std::vector<std::string> m_ToDelete;
+
+		void DeleteToDeletes();
 	};
 }

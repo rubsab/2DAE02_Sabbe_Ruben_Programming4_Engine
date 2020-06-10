@@ -43,7 +43,7 @@ void MyEngine::Minigin::Initialize(const std::string& dataPath, const char* wind
 	InputManager::GetInstance()->Init(m_pWindow);
 	ResourceManager::GetInstance()->Init(dataPath + "Images/");
 	SoundManager::GetInstance()->Init(dataPath + "Sound/");
-	PhysicsManager::GetInstance()->Init({ 0.0f, -9.81f }, 8, 3, ppm, { 255, 0, 0, 255 });
+	PhysicsManager::GetInstance()->Init({ 0.0f, -9.81f }, 8, 3, ppm, { 0, 255, 0, 255 });
 }
 
 /**

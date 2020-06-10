@@ -8,11 +8,11 @@ using namespace MyEngine;
 
 unsigned int Scene::m_IdCounter = 0;
 
-Scene::Scene(const std::string& name) : m_Name(name) {}
+Scene::Scene(const std::string& name, const bool removeOnDeactivate) : m_Name(name), m_RemoveOnDeactivate(removeOnDeactivate) {}
 
 Scene::~Scene()
 {
-	for (const std::pair<GameObject*, float>& pair : m_Objects)
+	for (std::pair<GameObject*, float>& pair : m_Objects)
 		Safe_Delete(pair.first);
 }
 

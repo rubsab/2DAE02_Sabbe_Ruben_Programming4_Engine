@@ -9,19 +9,23 @@
 #include "Engine\Components\Components.h"
 #include "Engine\Scene\GameObject.h"
 #include "Engine\Scene\Scene.h"
-#include "LevelDataParser.h"
+#include "DataHolder.h"
 #include "Box2D.h"
+#include "Factory.h"
 
 void LoadScene();
 
 int main(int, char* []) {
+	int windowWidth = 640;
+
 	MyEngine::Minigin engine;
-	engine.Initialize("../Resources/", "Programming 4 assignment", 640, 500, 20.0f);
-	std::vector<Level> levels;
-	LevelDataParser::ParseFile("../Resources/BBSprites/SeparatedLevelData.dat", "../Resources/BBSprites/SeparatedEnemyData.dat", levels);
+	engine.Initialize("../Resources/", "Programming 4 assignment", windowWidth, windowWidth / 32 * 25, windowWidth / 32.0f);
 	MyEngine::PhysicsManager::GetInstance()->EnableDebugDrawing(true);
-	LoadScene();
+	DataHolder::GetInstance()->Init();
+	CreateLevel(9, windowWidth / 32 * 25);
+	//LoadScene();
 	engine.Run();
+	DataHolder::Release();
 	return 0;
 }
 
@@ -71,19 +75,24 @@ void LoadScene()
 
 	go = new GameObject({ 320.0f, 200.0f });
 	go->AddComponent(new RenderComponent());
-	go->GetComponent<RenderComponent>()->AddTexture("logo.png", true, 1, 3, 1.0f, 50, 50);
+	go->GetComponent<RenderComponent>()->AddTexture("logo.png", true, 1, 3, 1.0f, 16, 50, { 0.5f, 0.5f }, -1, { 0.3333f, 0.0f }, { 0.3333f, 1.0f });
+	scene->Add(go);
+	
+	go = new GameObject({ 320.0f, 300.0f });
+	go->AddComponent(new RenderComponent());
+	go->GetComponent<RenderComponent>()->AddTexture("logo.png", false, 0, 0, 0.0f, 50, 50, { 0.5f, 0.5f }, -1, { 0.3333f, 0.0f }, { 0.3333f, 1.0f });
 	scene->Add(go);
 
 	GameObject* testGo = new GameObject();
 	testGo->AddComponent(new RenderComponent());
 	testGo->GetComponent<RenderComponent>()->AddTexture("logo.png", false, 0, 0, 0.0f, 150, 50);
-	testGo->AddComponent(new PhysicsComponent(MyEngine::PhysicsComponent::PhysicsType::Dynamic, 300.0f, 300.0f, 45.0f, 75.0f, 25.0f, 1.0f, 0.3f, 0.0f));
+	testGo->AddComponent(new PhysicsComponent(MyEngine::PhysicsComponent::PhysicsType::Dynamic, { 300.0f, 300.0f }, 45.0f, 75.0f, 25.0f, 1.0f, 0.3f, 0.0f));
 	scene->Add(testGo);
 
 	go = new GameObject();
 	go->AddComponent(new RenderComponent());
 	go->GetComponent<RenderComponent>()->AddTexture("logo.png", false, 0, 0, 0.0f, 150, 50);
-	go->AddComponent(new PhysicsComponent(MyEngine::PhysicsComponent::PhysicsType::Kinematic, 300.0f, 10.0f, 0.0f, 75.0f, 25.0f, 1.0f, 0.3f, 0.0f));
+	go->AddComponent(new PhysicsComponent(MyEngine::PhysicsComponent::PhysicsType::Kinematic, { 300.0f, 10.0f }, 0.0f, 75.0f, 25.0f, 1.0f, 0.3f, 0.0f));
 	go->AddComponent(new TestComponent(testGo));
 	scene->Add(go);
 

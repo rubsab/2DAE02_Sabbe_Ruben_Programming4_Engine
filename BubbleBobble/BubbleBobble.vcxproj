@@ -179,6 +179,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BubbleBobble.cpp" />
+    <ClCompile Include="DataHolder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Minigin\Minigin.vcxproj">
@@ -186,6 +187,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DataHolder.h" />
+    <ClInclude Include="Factory.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelDataParser.h" />
   </ItemGroup>

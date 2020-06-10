@@ -18,6 +18,9 @@
     <ClCompile Include="BubbleBobble.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DataHolder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelDataParser.h">
@@ -25,6 +28,12 @@
     </ClInclude>
     <ClInclude Include="Level.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DataHolder.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

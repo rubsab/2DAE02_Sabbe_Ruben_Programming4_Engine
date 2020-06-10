@@ -6,10 +6,10 @@
 #include "../Graphics/Renderer.h"
 #include "SDL_rect.h"
 
-MyEngine::PhysicsComponent::PhysicsComponent(const PhysicsType physicsType, const float posX, const float posY, const float angle, const float halfWidth, const float halfHeight, const float density, const float friction, const float restitution, unsigned short categoryBits, unsigned short maskBits)
+MyEngine::PhysicsComponent::PhysicsComponent(const PhysicsType physicsType, const glm::fvec2& pos, const float angle, const float halfWidth, const float halfHeight, const float density, const float friction, const float restitution, unsigned short categoryBits, unsigned short maskBits)
 {
 	b2BodyDef body;
-	body.position.Set(posX / PhysicsManager::GetInstance()->GetPixelsPerMeter(), posY / PhysicsManager::GetInstance()->GetPixelsPerMeter());
+	body.position.Set(pos.x / PhysicsManager::GetInstance()->GetPixelsPerMeter(), pos.y / PhysicsManager::GetInstance()->GetPixelsPerMeter());
 	body.type = b2BodyType(physicsType);
 	body.angle = angle * float(M_PI) / 180.0f;
 	m_pBody = PhysicsManager::GetInstance()->CreateBody(body);
