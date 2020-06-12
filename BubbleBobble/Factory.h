@@ -9,6 +9,7 @@
 #include "Engine\Components\RenderComponent.h"
 #include "Engine\Components\PhysicsComponent.h"
 #include "Engine\Components\TransformComponent.h"
+#include "Engine\Components\TextComponent.h"
 #include "MyComponents.h"
 #include "Engine\Managers\InputManager.h"
 #include "LevelManager.h"
@@ -112,11 +113,16 @@ inline void CreateLevel(int levelNr, const int windowHeight, float delay)
 	std::vector<GameObject*>& players = DataHolder::GetInstance()->GetPlayers();
 	for (GameObject* pPlayer : players)
 		levelScene->Add(pPlayer);
-	players[0]->GetComponent<TransformComponent>()->SetPosition(cellDimension * 4.0f, cellDimension * 3.0f);
-	players[0]->SetState(2);
-	players[1]->GetComponent<TransformComponent>()->SetPosition((windowHeight * 32 / 25) - cellDimension * 4.0f, cellDimension * 3.0f);
-	players[1]->SetState(3);
 
+	levelScene->Invoke(
+		[players, windowHeight, cellDimension](){
+			players[0]->GetComponent<TransformComponent>()->SetPosition(cellDimension * 4.0f, cellDimension * 3.0f);
+			players[0]->SetState(2);
+			players[1]->GetComponent<TransformComponent>()->SetPosition((windowHeight * 32 / 25) - cellDimension * 4.0f, cellDimension * 3.0f);
+			players[1]->SetState(3);}
+		, 0.0f);
+
+	levelObj->AddComponent(new TextComponent(std::to_string(levelNr), ResourceManager::GetInstance()->LoadFont("slkscr.ttf", 32), { 255, 255, 255, 255 }, { 0.0f, 0.0f }, 0.0f, { -2.0f, float(windowHeight) + 5.0f}));
 	for (size_t cellIndex{}; cellIndex < 32; cellIndex++)
 	{
 		size_t highestLine = 0;
@@ -124,7 +130,7 @@ inline void CreateLevel(int levelNr, const int windowHeight, float delay)
 		for (size_t lineIndex{}; lineIndex < 25; lineIndex++)
 		{
 			hasCollider[lineIndex].push_back(false);
-			if (level.Lines[lineIndex][cellIndex])
+			if (level.Lines[lineIndex][cellIndex] && !(lineIndex == 0 && (cellIndex == 0 || cellIndex == 1)))
 				levelObj->GetComponent<RenderComponent>()->AddTexture(blocksTex, false, false, 0, 0, 0.0f, cellDimension, cellDimension, { 0.0f, 0.0f }, -1, { (levelNr % 10) * 0.1f, (levelNr / 10) * 0.1f }, { 0.1f, 0.1f }, { cellIndex, 25 - lineIndex });
 
 			if (level.Lines[lineIndex][cellIndex] && !hasWall)
@@ -179,6 +185,7 @@ inline void CreateLevel(int levelNr, const int windowHeight, float delay)
 inline void CreateMenu(int windowHeight)
 {
 	Scene* pMenuScene = new Scene("MenuScene");
+	InputManager::GetInstance()->AddCommand({ {VK_ESCAPE, Hardware::KeyBoard}, {XINPUT_GAMEPAD_START, Hardware::Controller, 0}, {XINPUT_GAMEPAD_START, Hardware::Controller, 1} }, new Command{ []() { InputManager::GetInstance()->Quit(); }, ButtonState::Pressed, "MenuScene" });
 	InputManager::GetInstance()->AddCommand({ {VK_ESCAPE, Hardware::KeyBoard}, {XINPUT_GAMEPAD_START, Hardware::Controller, 0}, {XINPUT_GAMEPAD_START, Hardware::Controller, 1} }, new Command{ []() {LevelManager::GetInstance()->Notify(MyEngine::Event(LevelManager::LevelManagerEvent::GoBackToMenu)); }, ButtonState::Pressed, "" });
 	InputManager::GetInstance()->AddCommand({ {'1', Hardware::KeyBoard }, {XINPUT_GAMEPAD_LEFT_SHOULDER, Hardware::Controller, 0} }, new Command{ [windowHeight]() {DataHolder::GetInstance()->GetPlayers().back()->SetActive(false); CreateLevel(0, windowHeight, 0.0f); }, ButtonState::Pressed, "MenuScene" });
 	InputManager::GetInstance()->AddCommand({ {'2', Hardware::KeyBoard }, {XINPUT_GAMEPAD_RIGHT_SHOULDER, Hardware::Controller, 0}, {XINPUT_GAMEPAD_RIGHT_SHOULDER, Hardware::Controller, 1} }, new Command{ [windowHeight]() {DataHolder::GetInstance()->GetPlayers().back()->SetActive(true); CreateLevel(0, windowHeight, 0.0f); }, ButtonState::Pressed, "MenuScene" });

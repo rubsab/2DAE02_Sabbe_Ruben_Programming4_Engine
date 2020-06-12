@@ -20,6 +20,11 @@ Scene::~Scene()
 	InputManager::GetInstance()->RemoveCommandsByIdentifierName(m_Name);
 }
 
+void MyEngine::Scene::Invoke(std::function<void()>func, float delay)
+{
+	m_Invokers.push_back({ func, delay });
+}
+
 void Scene::Add(GameObject* pObject, float depth)
 {
 	m_Objects.push_back({ pObject, depth });
@@ -35,6 +40,18 @@ void MyEngine::Scene::BaseUpdate(const float deltaTime)
 
 void MyEngine::Scene::BaseFixedUpdate(const float fixedDeltaTime)
 {
+	for (size_t invokeCounter{}; invokeCounter < m_Invokers.size(); invokeCounter++)
+	{
+		m_Invokers[invokeCounter].second -= fixedDeltaTime;
+		if (m_Invokers[invokeCounter].second < 0.0f)
+		{
+			m_Invokers[invokeCounter].first();
+			m_Invokers[invokeCounter] = m_Invokers.back();
+			m_Invokers.pop_back();
+			invokeCounter--;
+		}
+	}
+
 	for (size_t objectCounter{}; objectCounter < m_Objects.size(); objectCounter++)
 	{
 		if (m_Objects[objectCounter].first->ShouldDespawn())

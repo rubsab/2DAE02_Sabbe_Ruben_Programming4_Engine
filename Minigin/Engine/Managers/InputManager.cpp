@@ -15,13 +15,14 @@ MyEngine::InputManager::~InputManager()
 void MyEngine::InputManager::Init(SDL_Window* pWindow)
 {
 	m_pWindow = pWindow;
+	m_ShouldQuit = false;
 }
 
 bool MyEngine::InputManager::ProcessSDLEvents() const
 {
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
-		if (e.type == SDL_QUIT) {
+		if (e.type == SDL_QUIT || m_ShouldQuit) {
 			return false;
 		}
 	}

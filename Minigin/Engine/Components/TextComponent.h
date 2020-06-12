@@ -16,7 +16,7 @@ namespace MyEngine
 		void FixedUpdate(const float fixedDeltaTime) override;
 		void Render() const override;
 
-		TextComponent(const std::string& text, Font* font, SDL_Color color, const glm::fvec2& pivot = { 0.5f, 0.5f }, const float angle = 0.0f);
+		TextComponent(const std::string& text, Font* font, SDL_Color color, const glm::fvec2& pivot = { 0.5f, 0.5f }, const float angle = 0.0f, const glm::fvec2& offSet = { 0.0f, 0.0f });
 
 		//Getters & Setters
 		Texture2D* GetTexture() const;
@@ -28,7 +28,7 @@ namespace MyEngine
 		Texture2D* m_pTexture;
 		SDL_Color m_Color;
 		float m_Angle;
-		glm::fvec2 m_Pivot;
+		glm::fvec2 m_Pivot, m_Offset;
 	};
 }
 

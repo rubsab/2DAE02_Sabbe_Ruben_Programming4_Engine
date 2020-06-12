@@ -65,6 +65,7 @@ namespace MyEngine
 		bool IsDown(const Button& button);
 		bool IsReleased(const Button& button);
 		void AddCommand(std::vector<Button> buttons, Command* command);
+		void Quit() { m_ShouldQuit = true; }
 		const SDL_Point GetMousePos() const;
 		const SDL_Point GetMouseMovement() const;
 		void RemoveCommandsByIdentifierName(const std::string& sceneName);
@@ -80,6 +81,7 @@ namespace MyEngine
 
 		SDL_Window* m_pWindow = nullptr;
 		SDL_Point m_MousePos, m_OldMousePos;
+		bool m_ShouldQuit;
 	};
 
 }

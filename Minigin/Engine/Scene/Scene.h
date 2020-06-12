@@ -1,4 +1,6 @@
 #pragma once
+#include <functional>
+#include <map>
 
 namespace MyEngine
 {
@@ -7,6 +9,7 @@ namespace MyEngine
 	{
 	public:
 		void Add(GameObject* pObject, float depth = 0.0f);
+		void Invoke(std::function<void()> func, float delay);
 
 		void BaseUpdate(const float deltaTime);
 		void BaseFixedUpdate(const float fixedDeltaTime);
@@ -33,6 +36,7 @@ namespace MyEngine
 		std::string m_Name;
 		std::vector <std::pair<GameObject*, float>> m_Objects{};
 		const bool m_RemoveOnDeactivate;
+		std::vector<std::pair<std::function<void()>, float>> m_Invokers;
 
 		static unsigned int m_IdCounter; 
 	};
