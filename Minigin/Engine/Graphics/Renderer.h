@@ -22,7 +22,7 @@ namespace MyEngine
 		void Destroy();
 
 		void RenderLine(const SDL_Point& p1, const SDL_Point& p2, const SDL_Point& pivot, const SDL_Color& color);
-		void RenderTexture(const Texture2D& texture, const SDL_Rect* dstRect, const SDL_Rect* srcRect, const float angle, const SDL_Point& pivot) const;
+		void RenderTexture(const Texture2D& texture, const SDL_Rect* dstRect, const SDL_Rect* srcRect, const float angle, const SDL_Point& pivot, bool isMirrored) const;
 
 		SDL_Renderer* GetSDLRenderer() const { return m_Renderer; }
 	private:

@@ -180,6 +180,7 @@
   <ItemGroup>
     <ClCompile Include="BubbleBobble.cpp" />
     <ClCompile Include="DataHolder.cpp" />
+    <ClCompile Include="MyComponents.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Minigin\Minigin.vcxproj">
@@ -191,6 +192,7 @@
     <ClInclude Include="Factory.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelDataParser.h" />
+    <ClInclude Include="MyComponents.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

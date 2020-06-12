@@ -20,15 +20,31 @@ void MyEngine::RenderComponent::FixedUpdate(const float fixedDeltaTime)
 {
 	for (AnimatedTexture& animText : m_Textures)
 	{
-		if (animText.IsAnimated)
+		if (animText.IsAnimated && animText.State == m_pGameObject->GetState())
 		{
 			animText.CurrentTime += fixedDeltaTime;
 			while (animText.CurrentTime >= animText.FrameTime)
 			{
 				animText.CurrentTime -= animText.FrameTime;
-				animText.CurrentFrame++;
-				animText.CurrentFrame %= animText.Rows * animText.Columns;
+				if (animText.IsReversed)
+				{
+					animText.CurrentFrame--;
+					if (animText.CurrentFrame < 0)
+						animText.CurrentFrame += animText.Rows * animText.Columns;
+				}
+				else
+				{
+					animText.CurrentFrame++;
+					animText.CurrentFrame %= animText.Rows * animText.Columns;
+				}
 			}
+		}
+		else
+		{
+			animText.CurrentTime = 0.0f;
+			animText.CurrentFrame = 0;
+			if (animText.IsReversed)
+				animText.CurrentFrame = animText.Rows * animText.Columns;
 		}
 	}
 }
@@ -61,19 +77,20 @@ void MyEngine::RenderComponent::Render() const
 			dstRect.y += int(worldOffset.y);
 			dstRect.x -= pivot.x;
 			dstRect.y += pivot.y;
-			Renderer::GetInstance()->RenderTexture(*m_Textures[i].Texture, &dstRect, &srcRect, m_pGameObject->GetComponent<TransformComponent>()->GetRotation(), pivot);
+
+			Renderer::GetInstance()->RenderTexture(*m_Textures[i].Texture, &dstRect, &srcRect, m_pGameObject->GetComponent<TransformComponent>()->GetRotation(), pivot, m_Textures[i].IsMirrored);
 		}
 	}
 }
 
-void MyEngine::RenderComponent::AddTexture(const std::string& filePath, bool isAnimated, const int rows, const int columns, const float frameTime, const int drawWidth, const int drawHeight, const glm::fvec2& pivot, const int activeState, const glm::fvec2 srcPos, const glm::fvec2 srcDim, const glm::fvec2 offSet)
+void MyEngine::RenderComponent::AddTexture(const std::string& filePath, bool isAnimated, bool isReversed, const int rows, const int columns, const float frameTime, const int drawWidth, const int drawHeight, const glm::fvec2& pivot, const int activeState, const glm::fvec2 srcPos, const glm::fvec2 srcDim, const glm::fvec2 offSet, bool mirror)
 {
-	m_Textures.push_back({ ResourceManager::GetInstance()->LoadTexture(filePath), frameTime, 0.0f, rows, columns, 0, activeState, drawWidth, drawHeight, isAnimated, pivot, srcPos, srcDim, offSet });
+	m_Textures.push_back({ ResourceManager::GetInstance()->LoadTexture(filePath), frameTime, 0.0f, rows, columns, 0, activeState, drawWidth, drawHeight, isAnimated, isReversed, mirror, pivot, srcPos, srcDim, offSet });
 }
 
-void MyEngine::RenderComponent::AddTexture(Texture2D* texture, bool isAnimated, const int rows, const int columns, const float frameTime, const int drawWidth, const int drawHeight, const glm::fvec2& pivot, const int activeState, const glm::fvec2 srcPos, const glm::fvec2 srcDim, const glm::fvec2 offSet)
+void MyEngine::RenderComponent::AddTexture(Texture2D* texture, bool isAnimated, bool isReversed, const int rows, const int columns, const float frameTime, const int drawWidth, const int drawHeight, const glm::fvec2& pivot, const int activeState, const glm::fvec2 srcPos, const glm::fvec2 srcDim, const glm::fvec2 offSet, bool mirror)
 {
-	m_Textures.push_back({ texture, frameTime, 0.0f, rows, columns, 0, activeState, drawWidth, drawHeight, isAnimated, pivot, srcPos, srcDim, offSet });
+	m_Textures.push_back({ texture, frameTime, 0.0f, rows, columns, 0, activeState, drawWidth, drawHeight, isAnimated, isReversed, mirror, pivot, srcPos, srcDim, offSet });
 }
 
 void MyEngine::RenderComponent::DimensionsSet(size_t index, SDL_Rect& dstRect) const

@@ -28,6 +28,9 @@ namespace MyEngine
 		void SetActive(bool isActive) { m_IsActive = isActive; }
 		bool IsActive() const { return m_IsActive; }
 
+		void SetShouldDespawn(bool shouldDespawn) { m_ShouldDespawn = shouldDespawn; }
+		bool ShouldDespawn() const { return m_ShouldDespawn; }
+
 		GameObject(const glm::fvec2& pos = { 0.0f, 0.0f }, const float angle = 0.0f);
 		~GameObject();
 		GameObject(const GameObject& other) = delete;
@@ -38,6 +41,6 @@ namespace MyEngine
 	private:
 		std::vector<BaseComponent*> m_Components;
 		int m_State;
-		bool m_IsActive;
+		bool m_IsActive, m_ShouldDespawn;
 	};
 }

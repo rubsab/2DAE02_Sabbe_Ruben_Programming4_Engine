@@ -33,13 +33,13 @@ void MyEngine::TransformComponent::SetPosition(float x, float y)
 
 void MyEngine::TransformComponent::SetPosition(const glm::fvec2& pos)
 {
+	m_Position = pos;
 	PhysicsComponent* pPhysics = m_pGameObject->GetComponent<PhysicsComponent>();
 	if (pPhysics)
 	{
 		pPhysics->m_pBody->SetTransform({ pos.x / PhysicsManager::GetInstance()->GetPixelsPerMeter(), pos.y / PhysicsManager::GetInstance()->GetPixelsPerMeter() }, pPhysics->m_pBody->GetAngle());
 		return;
 	}
-	m_Position = pos;
 }
 
 void MyEngine::TransformComponent::SetAngle(float angle)

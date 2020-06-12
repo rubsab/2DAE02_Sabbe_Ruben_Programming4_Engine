@@ -44,8 +44,8 @@ public:
 			Level& level = levels.back();
 			for (size_t lineCounter{}; lineCounter < 25; lineCounter++)
 			{
-				level.first.push_back(Line());
-				Line& line = level.first.back();
+				level.Lines.push_back(Line());
+				Line& line = level.Lines.back();
 				for (size_t charCounter{}; charCounter < 4; charCounter++)
 				{
 					char c{};
@@ -64,11 +64,11 @@ public:
 			{
 				enemyFile.read((char*)&second, sizeof(char));
 				enemyFile.read((char*)&third, sizeof(char));
-				level.second.push_back(Enemy());
-				level.second.back().Type = EnemyType(first & 0b00000111);
-				level.second.back().Col = int((first >> 3) & 0b00011111);
-				level.second.back().Row = int((second >> 3) & 0b00011111);
-				level.second.back().Delay = 0.017f * int((third << 1) & 0b00111111);
+				level.Enemies.push_back(Enemy());
+				level.Enemies.back().Type = EnemyType(first & 0b00000111);
+				level.Enemies.back().Col = int((first >> 3) & 0b00011111);
+				level.Enemies.back().Row = int((second >> 3) & 0b00011111);
+				level.Enemies.back().Delay = 0.017f * int((third << 1) & 0b00111111);
 				enemyFile.read((char*)&first, sizeof(char));
 			}
 		}

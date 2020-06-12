@@ -31,8 +31,18 @@ void MyEngine::Scene::BaseUpdate(const float deltaTime)
 
 void MyEngine::Scene::BaseFixedUpdate(const float fixedDeltaTime)
 {
-	for (const std::pair<GameObject*, float>& pair : m_Objects)
-		pair.first->FixedUpdate(fixedDeltaTime);
+	for (size_t objectCounter{}; objectCounter < m_Objects.size(); objectCounter++)
+	{
+		if (m_Objects[objectCounter].first->ShouldDespawn())
+		{
+			Safe_Delete(m_Objects[objectCounter].first);
+			m_Objects[objectCounter] = m_Objects.back();
+			m_Objects.pop_back();
+			objectCounter--;
+			continue;
+		}
+		m_Objects[objectCounter].first->FixedUpdate(fixedDeltaTime);
+	}
 	FixedUpdate(fixedDeltaTime);
 }
 

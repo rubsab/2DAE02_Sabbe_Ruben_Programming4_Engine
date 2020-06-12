@@ -17,12 +17,13 @@ void LoadScene();
 
 int main(int, char* []) {
 	int windowWidth = 640;
+	int level = 0;
 
 	MyEngine::Minigin engine;
 	engine.Initialize("../Resources/", "Programming 4 assignment", windowWidth, windowWidth / 32 * 25, windowWidth / 32.0f);
 	MyEngine::PhysicsManager::GetInstance()->EnableDebugDrawing(true);
-	DataHolder::GetInstance()->Init();
-	CreateLevel(9, windowWidth / 32 * 25);
+	DataHolder::GetInstance()->Init(windowWidth, windowWidth / 32 * 25);
+	CreateLevel(level, windowWidth / 32 * 25);
 	//LoadScene();
 	engine.Run();
 	DataHolder::Release();
@@ -63,44 +64,43 @@ void LoadScene()
 		RUNNING = 1
 	};
 
-	GameObject* go = new GameObject({ 320.0f, 250.0f });
+	MyEngine::GameObject* go = new MyEngine::GameObject({ 320.0f, 250.0f });
 	go->SetState(States::IDLE);
 	go->AddComponent(new RenderComponent());
-	go->GetComponent<RenderComponent>()->AddTexture("background.jpg", false, 0, 0, 0.0f, 0, 0, { 0.5f, 0.5f }, States::IDLE);
+	go->GetComponent<RenderComponent>()->AddTexture("background.jpg", false, false, 0, 0, 0.0f, 0, 0, { 0.5f, 0.5f }, States::IDLE);
 	scene->Add(go);
 
 	SoundEffect* sound = SoundManager::GetInstance()->LoadSoundEffect("GunShot.wav");
-	MyEngine::InputManager::GetInstance()->AddCommand(XINPUT_GAMEPAD_A, MyEngine::Hardware::Controller, new MyEngine::Command{ [sound]() { sound->Play(0); }, MyEngine::ButtonState::Pressed }, 0);
-	MyEngine::InputManager::GetInstance()->AddCommand(VK_LBUTTON, MyEngine::Hardware::Mouse, new MyEngine::Command{ [sound]() { sound->Play(0); }, MyEngine::ButtonState::Pressed }, 0);
+	MyEngine::InputManager::GetInstance()->AddCommand({ {XINPUT_GAMEPAD_A, MyEngine::Hardware::Controller}, {VK_LBUTTON, MyEngine::Hardware::Mouse} }, new MyEngine::Command{ [sound]() { sound->Play(0); }, MyEngine::ButtonState::Pressed }, 0);
 
-	go = new GameObject({ 320.0f, 200.0f });
+	go = new MyEngine::GameObject({ 320.0f, 200.0f });
 	go->AddComponent(new RenderComponent());
-	go->GetComponent<RenderComponent>()->AddTexture("logo.png", true, 1, 3, 1.0f, 16, 50, { 0.5f, 0.5f }, -1, { 0.3333f, 0.0f }, { 0.3333f, 1.0f });
+	go->GetComponent<RenderComponent>()->AddTexture("logo.png", true, false, 1, 3, 1.0f, 16, 50, { 0.5f, 0.5f }, -1, { 0.3333f, 0.0f }, { 0.3333f, 1.0f });
 	scene->Add(go);
 	
-	go = new GameObject({ 320.0f, 300.0f });
+	go = new MyEngine::GameObject({ 320.0f, 300.0f });
 	go->AddComponent(new RenderComponent());
-	go->GetComponent<RenderComponent>()->AddTexture("logo.png", false, 0, 0, 0.0f, 50, 50, { 0.5f, 0.5f }, -1, { 0.3333f, 0.0f }, { 0.3333f, 1.0f });
+	go->GetComponent<RenderComponent>()->AddTexture("logo.png", false, false, 0, 0, 0.0f, 50, 50, { 0.5f, 0.5f }, -1, { 0.3333f, 0.0f }, { 0.3333f, 1.0f });
 	scene->Add(go);
 
-	GameObject* testGo = new GameObject();
+	MyEngine::GameObject* testGo = new MyEngine::GameObject();
 	testGo->AddComponent(new RenderComponent());
-	testGo->GetComponent<RenderComponent>()->AddTexture("logo.png", false, 0, 0, 0.0f, 150, 50);
+	testGo->GetComponent<RenderComponent>()->AddTexture("logo.png", false, false, 0, 0, 0.0f, 150, 50);
 	testGo->AddComponent(new PhysicsComponent(MyEngine::PhysicsComponent::PhysicsType::Dynamic, { 300.0f, 300.0f }, 45.0f, 75.0f, 25.0f, 1.0f, 0.3f, 0.0f));
 	scene->Add(testGo);
 
-	go = new GameObject();
+	go = new MyEngine::GameObject();
 	go->AddComponent(new RenderComponent());
-	go->GetComponent<RenderComponent>()->AddTexture("logo.png", false, 0, 0, 0.0f, 150, 50);
+	go->GetComponent<RenderComponent>()->AddTexture("logo.png", false, false, 0, 0, 0.0f, 150, 50);
 	go->AddComponent(new PhysicsComponent(MyEngine::PhysicsComponent::PhysicsType::Kinematic, { 300.0f, 10.0f }, 0.0f, 75.0f, 25.0f, 1.0f, 0.3f, 0.0f));
 	go->AddComponent(new TestComponent(testGo));
 	scene->Add(go);
 
-	go = new GameObject({ 80.0f, 480.0f });
+	go = new MyEngine::GameObject({ 80.0f, 480.0f });
 	go->AddComponent(new TextComponent("Programming 4 Assignment", ResourceManager::GetInstance()->LoadFont("Lingua.otf", 36), { 255, 255, 255 }, { 0.0f, 0.0f }));
 	scene->Add(go);
 	
-	go = new GameObject({ 0.0f, 500.0f });
+	go = new MyEngine::GameObject({ 0.0f, 500.0f });
 	go->AddComponent(new TextComponent(" ", ResourceManager::GetInstance()->LoadFont("Lingua.otf", 36), { 255, 255, 0 }, { 0.0f, 0.0f }));
 	go->AddComponent(new FPSComponent());
 	scene->Add(go);

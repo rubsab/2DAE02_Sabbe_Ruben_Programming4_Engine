@@ -6,27 +6,39 @@
 
 MyEngine::InputManager::~InputManager()
 {
-	for (const std::pair<std::pair<const int, const int>, std::vector<const Command*>>& pair : m_ControllerMappings)
+	for (const std::pair<std::pair<const int, const int>, std::vector<Command*>>& pair : m_ControllerMappings)
 	{
-		for (const Command* command : pair.second)
+		for (Command* command : pair.second)
 		{
-			Safe_Delete(command);
+			if (!command->IsDeleted)
+			{
+				command->IsDeleted = true;
+				Safe_Delete(command);
+			}
 		}
 	}
 	
-	for (const std::pair<std::pair<const int, const int>, std::vector<const Command*>>& pair : m_KeyBoardMappings)
+	for (const std::pair<std::pair<const int, const int>, std::vector<Command*>>& pair : m_KeyBoardMappings)
 	{
-		for (const Command* command : pair.second)
+		for (Command* command : pair.second)
 		{
-			Safe_Delete(command);
+			if (!command->IsDeleted)
+			{
+				command->IsDeleted = true;
+				Safe_Delete(command);
+			}
 		}
 	}
 	
-	for (const std::pair<std::pair<const int, const int>, std::vector<const Command*>>& pair : m_MouseMappings)
+	for (const std::pair<std::pair<const int, const int>, std::vector<Command*>>& pair : m_MouseMappings)
 	{
-		for (const Command* command : pair.second)
+		for (Command* command : pair.second)
 		{
-			Safe_Delete(command);
+			if (!command->IsDeleted)
+			{
+				command->IsDeleted = true;
+				Safe_Delete(command);
+			}
 		}
 	}
 }
@@ -92,24 +104,27 @@ bool MyEngine::InputManager::IsReleased(const int buttonCode, const Hardware& ha
 	return IsButtonState(buttonCode, hardWare, ButtonState::Released, id);
 }
 
-void MyEngine::InputManager::AddCommand(const int buttonCode, const Hardware& hardWare, const Command* command, const int id)
+void MyEngine::InputManager::AddCommand(std::vector<std::pair<const int, const Hardware>> buttons, Command* command, const int id)
 {
-	switch (hardWare)
+	for (std::pair<const int, const Hardware>& button : buttons)
 	{
-	case(Hardware::KeyBoard):
-		AddCommand(m_KeyBoardMappings, buttonCode, command, id);
-		m_KeyBoardStates[{buttonCode, id}] = ButtonState::None;
-		break;
-	case(Hardware::Controller):
-		AddCommand(m_ControllerMappings, buttonCode, command, id);
-		m_ControllerStates[{buttonCode, id}] = ButtonState::None;
-		break;
-	case(Hardware::Mouse):
-		AddCommand(m_MouseMappings, buttonCode, command, id);
-		m_MouseStates[{buttonCode, id}] = ButtonState::None;
-		break;
-	default:
-		break;
+		switch (button.second)
+		{
+		case(Hardware::KeyBoard):
+			AddCommand(m_KeyBoardMappings, button.first, command, id);
+			m_KeyBoardStates[{button.first, id}] = ButtonState::None;
+			break;
+		case(Hardware::Controller):
+			AddCommand(m_ControllerMappings, button.first, command, id);
+			m_ControllerStates[{button.first, id}] = ButtonState::None;
+			break;
+		case(Hardware::Mouse):
+			AddCommand(m_MouseMappings, button.first, command, id);
+			m_MouseStates[{button.first, id}] = ButtonState::None;
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -156,9 +171,9 @@ void MyEngine::InputManager::UpdateState(const bool down, std::pair<const std::p
 	}
 }
 
-void MyEngine::InputManager::ExecuteCommands(const Hardware& hardWare, const std::map<std::pair<const int, const int>, std::vector<const Command*>>& mappings)
+void MyEngine::InputManager::ExecuteCommands(const Hardware& hardWare, const std::map<std::pair<const int, const int>, std::vector<Command*>>& mappings)
 {
-	for (const std::pair<std::pair<const int, const int>, std::vector<const Command*>>& pair : mappings)
+	for (const std::pair<std::pair<const int, const int>, std::vector<Command*>>& pair : mappings)
 	{
 		for (const Command* command : pair.second)
 		{
@@ -168,7 +183,7 @@ void MyEngine::InputManager::ExecuteCommands(const Hardware& hardWare, const std
 	}
 }
 
-void MyEngine::InputManager::AddCommand(std::map<std::pair<const int, const int>, std::vector<const Command*>>& mappings, const int buttonCode, const Command* command, const int id)
+void MyEngine::InputManager::AddCommand(std::map<std::pair<const int, const int>, std::vector<Command*>>& mappings, const int buttonCode, Command* command, const int id)
 {
 	for (const Command* pCommand : mappings[{buttonCode, id}])
 	{

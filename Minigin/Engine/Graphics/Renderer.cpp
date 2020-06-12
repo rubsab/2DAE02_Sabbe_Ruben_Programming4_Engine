@@ -43,11 +43,11 @@ void MyEngine::Renderer::RenderLine(const SDL_Point& p1, const SDL_Point& p2, co
 	SDL_RenderDrawLine(Renderer::GetInstance()->GetSDLRenderer(), p1.x, h - (2 * pivot.y - p1.y), p2.x, h - (2 * pivot.y - p2.y));
 }
 
-void MyEngine::Renderer::RenderTexture(const Texture2D& texture, const SDL_Rect* dstRect, const SDL_Rect* srcRect, const float angle, const SDL_Point& pivot) const
+void MyEngine::Renderer::RenderTexture(const Texture2D& texture, const SDL_Rect* dstRect, const SDL_Rect* srcRect, const float angle, const SDL_Point& pivot, bool isMirrored) const
 {
 	int w, h;
 	SDL_GetRendererOutputSize(m_Renderer, &w, &h);
 	SDL_Rect rect{ dstRect->x, h - dstRect->y, dstRect->w, dstRect->h };
 	SDL_Point newPivot{ pivot.x, - pivot.y };
-	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), srcRect, &rect, angle, &pivot, SDL_RendererFlip::SDL_FLIP_NONE);
+	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), srcRect, &rect, angle, &pivot, SDL_RendererFlip(isMirrored));
 }

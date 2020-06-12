@@ -9,7 +9,8 @@
 
 MyEngine::GameObject::GameObject(const glm::fvec2& pos, const float angle):
 	m_State(-1),
-	m_IsActive(true)
+	m_IsActive(true),
+	m_ShouldDespawn(false)
 {
 	AddComponent(new TransformComponent(pos, angle));
 }
