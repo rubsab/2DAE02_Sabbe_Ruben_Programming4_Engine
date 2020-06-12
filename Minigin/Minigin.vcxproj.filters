@@ -75,9 +75,6 @@
     <ClInclude Include="Engine\Helpers\Observer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Helpers\AchievementSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Managers\SoundManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>

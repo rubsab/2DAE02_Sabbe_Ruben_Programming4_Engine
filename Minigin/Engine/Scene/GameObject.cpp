@@ -7,10 +7,12 @@
 #include <exception>
 #include <glm\common.hpp>
 
-MyEngine::GameObject::GameObject(const glm::fvec2& pos, const float angle):
+MyEngine::GameObject::GameObject(const glm::fvec2& pos, const float angle, bool shouldRemoveOnSceneKill):
 	m_State(-1),
 	m_IsActive(true),
-	m_ShouldDespawn(false)
+	m_ShouldDespawn(false),
+	m_ShouldRemoveOnSceneKill(shouldRemoveOnSceneKill)
+
 {
 	AddComponent(new TransformComponent(pos, angle));
 }

@@ -3,6 +3,9 @@
 #include "../Helpers/Singleton.h"
 #include <map>
 #include <functional>
+#include <SDL.h>
+#include <string>
+#include <vector>
 
 struct SDL_Window;
 
@@ -23,11 +26,30 @@ namespace MyEngine
 		Mouse
 	};
 
-	struct Command
+	class OldCommand 
+	{
+	public:
+		OldCommand(const ButtonState state) { m_State = state; }
+		virtual ~OldCommand() {}
+		virtual void Execute(GameObject* obj) = 0;
+		const ButtonState GetState() const { return m_State; }
+	private:
+		ButtonState m_State;
+	};
+
+	struct Command final
 	{
 		std::function<void()> Action;
 		ButtonState State;
+		std::string SceneName;
 		bool IsDeleted = false;
+	};
+
+	struct Button
+	{
+		int ButtonCode;
+		Hardware HardWare;
+		int Id;
 	};
 
 	class InputManager final : public Singleton<InputManager>
@@ -38,20 +60,26 @@ namespace MyEngine
 		void Init(SDL_Window* pWindow);
 		bool ProcessSDLEvents() const;
 		void ProcessInput();
-		bool IsButtonState(const int buttonCode, const Hardware& hardWare, const ButtonState& buttonState, const int id = 0);
-		bool IsPressed(const int buttonCode, const Hardware& hardWare, const int id = 0);
-		bool IsDown(const int buttonCode, const Hardware& hardWare, const int id = 0);
-		bool IsReleased(const int buttonCode, const Hardware& hardWare, const int id = 0);
-		void AddCommand(std::vector<std::pair<const int, const Hardware>> buttons, Command* command, const int id = 0);
+		bool IsButtonState(const Button& button, const ButtonState& buttonState);
+		bool IsPressed(const Button& button);
+		bool IsDown(const Button& button);
+		bool IsReleased(const Button& button);
+		void AddCommand(std::vector<Button> buttons, Command* command);
+		const SDL_Point GetMousePos() const;
+		const SDL_Point GetMouseMovement() const;
+		void RemoveCommandsByIdentifierName(const std::string& sceneName);
 	private:
+		void DestroyMap(const std::map<std::pair<const int, const int>, std::vector<Command*>>& map);
 		void UpdateStates(const Hardware& hardWare);
 		void UpdateState(const bool down, std::pair<const std::pair<const int, const int>, ButtonState>& button);
 		void ExecuteCommands(const Hardware& hardWare, const std::map<std::pair<const int, const int>, std::vector<Command*>>& mappings);
 		void AddCommand(std::map<std::pair<const int, const int>, std::vector<Command*>>& mappings, const int buttonCode, Command* command, const int id);
+		void ClearCommmandsByIDName(const std::string& sceneName, std::map<std::pair<const int, const int>, std::vector<Command*>>& map);
 		std::map<std::pair<const int, const int>, std::vector<Command*>> m_ControllerMappings, m_KeyBoardMappings, m_MouseMappings;
 		std::map<std::pair<const int, const int>, ButtonState> m_ControllerStates, m_KeyBoardStates, m_MouseStates;
 
 		SDL_Window* m_pWindow = nullptr;
+		SDL_Point m_MousePos, m_OldMousePos;
 	};
 
 }

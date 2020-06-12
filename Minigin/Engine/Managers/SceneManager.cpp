@@ -15,6 +15,15 @@ void MyEngine::SceneManager::FixedUpdate(const float fixedDeltaTime)
 	if (m_ActiveScene >= 0)
 		m_Scenes[m_ActiveScene]->BaseFixedUpdate(fixedDeltaTime);
 	DeleteToDeletes();
+	if (!m_DelayedName.empty())
+	{
+		m_DelayTimer -= fixedDeltaTime;
+		if (m_DelayTimer <= 0.0f)
+		{
+			SetSceneActive(m_DelayedName);
+			m_DelayedName = "";
+		}
+	}
 }
 
 void MyEngine::SceneManager::Render() const
@@ -50,15 +59,18 @@ MyEngine::Scene* MyEngine::SceneManager::RemoveScene(const std::string& name)
 	const std::vector<Scene*>::iterator it = std::find_if(m_Scenes.begin(), m_Scenes.end(), [name](Scene* scene) {return scene->GetName() == name; });
 	if (it != m_Scenes.end())
 	{
-		if (it - m_Scenes.begin() == 0)
+		if (it - m_Scenes.begin() == m_ActiveScene)
 		{
 			Logger::LogWarning("Scene with name '" + name + "' is currently active");
 			return nullptr;
 		}
+		else if (it - m_Scenes.begin() < m_ActiveScene)
+			m_ActiveScene--;
+		Scene* scene = *it;
 		m_Scenes.erase(it);
-		return *it;
+		return scene;
 	}
-	Logger::LogWarning("Scene with name '" + name + "' does not exist");
+	//Logger::LogWarning("Scene with name '" + name + "' does not exist");
 	return nullptr;
 }
 
@@ -67,12 +79,18 @@ void MyEngine::SceneManager::SetSceneActive(const std::string& name)
 	const std::vector<Scene*>::iterator it = std::find_if(m_Scenes.begin(), m_Scenes.end(), [name](Scene* scene) {return scene->GetName() == name; });
 	if (it != m_Scenes.end())
 	{
-		if (m_Scenes[m_ActiveScene]->GetShouldRemove())
+		if (m_Scenes[m_ActiveScene]->GetShouldRemove() && std::find(m_ToDelete.begin(), m_ToDelete.end(), m_Scenes[m_ActiveScene]->GetName()) == m_ToDelete.end())
 			m_ToDelete.push_back(m_Scenes[m_ActiveScene]->GetName());
 		m_ActiveScene = int(it - m_Scenes.begin());
 		return;
 	}
 	Logger::LogWarning("Scene with name '" + name + "' does not exist");
+}
+
+void MyEngine::SceneManager::SetSceneActiveDelayed(const std::string& name, float delay)
+{
+	m_DelayedName = name;
+	m_DelayTimer = delay;
 }
 
 MyEngine::SceneManager::~SceneManager()

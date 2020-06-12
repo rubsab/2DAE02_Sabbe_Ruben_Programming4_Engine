@@ -230,7 +230,6 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x64\*.dll" "$(OutputPath)" /R /Y</C
     <ClInclude Include="Engine\Components\BaseComponent.h" />
     <ClInclude Include="Engine\Components\Components.h" />
     <ClInclude Include="Engine\Graphics\Font.h" />
-    <ClInclude Include="Engine\Helpers\AchievementSystem.h" />
     <ClInclude Include="Engine\Helpers\FixedSizeAllocator.h" />
     <ClInclude Include="Engine\Helpers\Observer.h" />
     <ClInclude Include="Engine\Scene\GameObject.h" />

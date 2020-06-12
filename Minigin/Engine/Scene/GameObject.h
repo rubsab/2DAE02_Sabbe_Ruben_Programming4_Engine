@@ -31,7 +31,10 @@ namespace MyEngine
 		void SetShouldDespawn(bool shouldDespawn) { m_ShouldDespawn = shouldDespawn; }
 		bool ShouldDespawn() const { return m_ShouldDespawn; }
 
-		GameObject(const glm::fvec2& pos = { 0.0f, 0.0f }, const float angle = 0.0f);
+		void SetShouldRemoveOnSceneKill(bool shouldRemoveOnSceneKill) { m_ShouldRemoveOnSceneKill = shouldRemoveOnSceneKill; }
+		bool ShouldRemoveOnSceneKill() const { return m_ShouldRemoveOnSceneKill; }
+
+		GameObject(const glm::fvec2& pos = { 0.0f, 0.0f }, const float angle = 0.0f, bool shouldRemoveOnSceneKill = true);
 		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -41,6 +44,6 @@ namespace MyEngine
 	private:
 		std::vector<BaseComponent*> m_Components;
 		int m_State;
-		bool m_IsActive, m_ShouldDespawn;
+		bool m_IsActive, m_ShouldDespawn, m_ShouldRemoveOnSceneKill;
 	};
 }

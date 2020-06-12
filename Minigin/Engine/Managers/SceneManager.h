@@ -11,6 +11,8 @@ namespace MyEngine
 		void AddScene(Scene* pScene);
 		Scene* RemoveScene(const std::string& name);
 		void SetSceneActive(const std::string& name);
+		void SetSceneActiveDelayed(const std::string& name, float delay);
+		Scene* GetActiveScene() const { return m_Scenes[m_ActiveScene]; };
 		~SceneManager();
 
 		void Update(const float deltaTime);
@@ -22,5 +24,7 @@ namespace MyEngine
 		std::vector<std::string> m_ToDelete;
 
 		void DeleteToDeletes();
+		float m_DelayTimer;
+		std::string m_DelayedName;
 	};
 }

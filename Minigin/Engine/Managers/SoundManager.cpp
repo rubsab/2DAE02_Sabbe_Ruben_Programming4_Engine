@@ -15,22 +15,36 @@ void MyEngine::SoundManager::Init(const std::string& data)
 	}
 }
 
+void MyEngine::SoundManager::Notify(const Event event, const int value, const GameObject*)
+{
+	for (SoundEffect* soundEffect : m_SoundEffects[event])
+		soundEffect->Play(value);
+	for (SoundStream* soundStream : m_SoundStreams[event])
+		soundStream->Play(bool(value));
+}
+
 MyEngine::SoundManager::~SoundManager()
 {
-	for (const SoundEffect* soundEffect : m_SoundEffects)
-		Safe_Delete(soundEffect);
-	for (const SoundStream* soundStream : m_SoundStreams)
-		Safe_Delete(soundStream);
+	for (const std::pair<const Event, std::vector<SoundEffect*>>& pair : m_SoundEffects)
+	{
+		for (SoundEffect* pSoundEffect : pair.second)
+			Safe_Delete(pSoundEffect);
+	}
+	for (const std::pair<const Event, std::vector<SoundStream*>>& pair : m_SoundStreams)
+	{
+		for (SoundStream* pSoundStream : pair.second)
+			Safe_Delete(pSoundStream);
+	}
 }
 
-MyEngine::SoundEffect* MyEngine::SoundManager::LoadSoundEffect(const std::string& file)
+MyEngine::SoundEffect* MyEngine::SoundManager::LoadSoundEffect(const std::string& file, const Event event)
 {
-	m_SoundEffects.push_back(new MyEngine::SoundEffect(m_DataPath + file));
-	return m_SoundEffects.back();
+	m_SoundEffects[event].push_back(new MyEngine::SoundEffect(m_DataPath + file));
+	return m_SoundEffects[event].back();
 }
 
-MyEngine::SoundStream* MyEngine::SoundManager::LoadSoundStream(const std::string& file)
+MyEngine::SoundStream* MyEngine::SoundManager::LoadSoundStream(const std::string& file, const Event event)
 {
-	m_SoundStreams.push_back(new MyEngine::SoundStream(m_DataPath + file));
-	return m_SoundStreams.back();
+	m_SoundStreams[event].push_back(new MyEngine::SoundStream(m_DataPath + file));
+	return m_SoundStreams[event].back();
 }

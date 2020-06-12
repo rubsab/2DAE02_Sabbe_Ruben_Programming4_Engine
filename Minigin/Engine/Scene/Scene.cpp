@@ -13,7 +13,11 @@ Scene::Scene(const std::string& name, const bool removeOnDeactivate) : m_Name(na
 Scene::~Scene()
 {
 	for (std::pair<GameObject*, float>& pair : m_Objects)
-		Safe_Delete(pair.first);
+	{
+		if (pair.first->ShouldRemoveOnSceneKill())
+			Safe_Delete(pair.first);
+	}
+	InputManager::GetInstance()->RemoveCommandsByIdentifierName(m_Name);
 }
 
 void Scene::Add(GameObject* pObject, float depth)

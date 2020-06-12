@@ -10,8 +10,7 @@
 #include "Engine\Scene\Scene.h"
 #include "Factory.h"
 
-PlayerMovementComponent::PlayerMovementComponent(const Level& level) :
-	m_CurrentLevel(level),
+PlayerMovementComponent::PlayerMovementComponent() :
 	m_JumpTime(0.0f),
 	m_ShootTime(0.0f)
 {
@@ -34,7 +33,7 @@ void PlayerMovementComponent::FixedUpdate(const float fixedDeltaTime)
 	//Horizontal Movement
 	if (state == 0 || state == 1)
 	{
-		if (m_CurrentLevel.IsWallInFront(trans->GetPosition(), bool(state)))
+		if (currentLevel.IsWallInFront(trans->GetPosition(), bool(state)))
 			m_pGameObject->SetState(state + 2);
 		else
 			trans->SetPosition(trans->GetPosition().x + -(state * 2 - 1) * fixedDeltaTime * 120.0f, trans->GetPosition().y);
@@ -46,7 +45,7 @@ void PlayerMovementComponent::FixedUpdate(const float fixedDeltaTime)
 		m_JumpTime -= fixedDeltaTime;
 		trans->SetPosition(trans->GetPosition().x, trans->GetPosition().y + fixedDeltaTime * 200.0f);
 	}
-	else if (!m_CurrentLevel.IsWallBelow(trans->GetPosition()))
+	else if (!currentLevel.IsWallBelow(trans->GetPosition()))
 		trans->SetPosition(trans->GetPosition().x, trans->GetPosition().y - fixedDeltaTime * 94.0f);
 }
 
@@ -54,7 +53,7 @@ void PlayerMovementComponent::Render() const {}
 
 void PlayerMovementComponent::Jump()
 {
-	if (m_CurrentLevel.IsWallBelow(m_pGameObject->GetComponent<MyEngine::TransformComponent>()->GetPosition()))
+	if (currentLevel.IsWallBelow(m_pGameObject->GetComponent<MyEngine::TransformComponent>()->GetPosition()))
 		m_JumpTime += 0.51f;
 }
 
@@ -64,14 +63,12 @@ void PlayerMovementComponent::Shoot()
 	m_pGameObject->SetState((m_pGameObject->GetState() % 2) + 4);
 }
 
-BubbleBehaviourComponent::BubbleBehaviourComponent(const Level& level, bool isLookingLeft, MyEngine::GameObject* pPlayer, MyEngine::Scene* pScene):
-	m_CurrentLevel(level),
+BubbleBehaviourComponent::BubbleBehaviourComponent(bool isLookingLeft):
 	m_SidewaysTimer(0.3f),
 	m_IsDirLeft(isLookingLeft),
 	m_LifeTime(5.0f),
-	m_pHeldEnemy(nullptr),
-	m_pPlayer(pPlayer),
-	m_pScene(pScene)
+	m_NextLevelTimer(0.0f),
+	m_pHeldEnemy(nullptr)
 {
 }
 
@@ -91,24 +88,31 @@ void BubbleBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 	}
 	MyEngine::TransformComponent* trans = m_pGameObject->GetComponent<MyEngine::TransformComponent>();
 
-	if (m_SidewaysTimer > 0.0f)
+	if (m_SidewaysTimer > 0.0f && !currentLevel.IsWallInFront(trans->GetPosition(), m_IsDirLeft) && m_pGameObject->GetState() == 0)
 	{
 		m_SidewaysTimer -= fixedDeltaTime;
-		if (!m_CurrentLevel.IsWallInFront(trans->GetPosition(), m_IsDirLeft))
-			trans->SetPosition(trans->GetPosition().x + -(int(m_IsDirLeft) * 2 - 1) * 600.0f * fixedDeltaTime, trans->GetPosition().y);
-		return;
+		trans->SetPosition(trans->GetPosition().x + -(int(m_IsDirLeft) * 2 - 1) * 600.0f * fixedDeltaTime, trans->GetPosition().y);
 	}
-	if (!m_CurrentLevel.IsWallAbove(trans->GetPosition()))
+	else if (!currentLevel.IsWallAbove(trans->GetPosition()))
+	{
+		m_SidewaysTimer = 0.f;
 		trans->SetPosition(trans->GetPosition().x, trans->GetPosition().y + fixedDeltaTime * 50.0f);
+	}
 
 	if (m_pGameObject->GetState() == 1)
 	{
-		if (m_pGameObject->GetComponent<MyEngine::PhysicsComponent>()->IsOverlapping(m_pPlayer->GetComponent<MyEngine::PhysicsComponent>()))
+		for (MyEngine::GameObject* pPlayer : DataHolder::GetInstance()->GetPlayers())
 		{
-			m_pScene->Add(CreateFruitDrop(m_pPlayer, m_CurrentLevel, m_pHeldEnemy->GetComponent<EnemyBehaviourComponent>()->GetType(), m_pGameObject->GetComponent<TransformComponent>()->GetPosition()));
-			m_pGameObject->SetShouldDespawn(true);
-			DataHolder::GetInstance()->RemoveEnemy(m_pHeldEnemy);
-			m_pHeldEnemy->SetShouldDespawn(true);
+			if (m_pGameObject->GetComponent<MyEngine::PhysicsComponent>()->IsOverlapping(pPlayer->GetComponent<MyEngine::PhysicsComponent>()))
+			{
+				SceneManager::GetInstance()->GetActiveScene()->Add(CreateFruitDrop(m_pHeldEnemy->GetComponent<EnemyBehaviourComponent>()->GetType(), m_pGameObject->GetComponent<TransformComponent>()->GetPosition()));
+				m_pGameObject->SetShouldDespawn(true);
+				DataHolder::GetInstance()->RemoveEnemy(m_pHeldEnemy);
+				m_pHeldEnemy->SetShouldDespawn(true);
+				if (DataHolder::GetInstance()->GetEnemies().size() == 0)
+					LevelManager::GetInstance()->Notify(MyEngine::Event(LevelManager::LevelManagerEvent::IncreaseLevel));
+				return;
+			}
 		}
 		return;
 	}
@@ -120,7 +124,7 @@ void BubbleBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 		{
 			m_pHeldEnemy = enemy;
 			enemy->SetActive(false);
-			m_pGameObject->GetComponent<MyEngine::RenderComponent>()->AddTexture(MyEngine::ResourceManager::GetInstance()->LoadTexture("bubbles.png"), true, false, 1, 4, 0.25f, m_CurrentLevel.WindowWidth / 16, int(m_CurrentLevel.WindowHeight / 12.5f), { 0.5f, 0.5f }, 1, { 0.0f, 0.2f /*+ 0.1f * int(enemy.Type)*/ }, { 1.0f, 0.1f });
+			m_pGameObject->GetComponent<MyEngine::RenderComponent>()->AddTexture(MyEngine::ResourceManager::GetInstance()->LoadTexture("bubbles.png"), true, false, 1, 4, 0.25f, currentLevel.WindowWidth / 16, int(currentLevel.WindowHeight / 12.5f), { 0.5f, 0.5f }, 1, { 0.0f, 0.2f /*+ 0.1f * int(enemy.Type)*/ }, { 1.0f, 0.1f });
 			m_pGameObject->SetState(1);
 			m_LifeTime = 3.0f;
 			return;
@@ -130,9 +134,7 @@ void BubbleBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 
 void BubbleBehaviourComponent::Render() const {}
 
-FruitDropComponent::FruitDropComponent(MyEngine::GameObject* pPlayer, const Level& level):
-	m_pPlayer(pPlayer),
-	m_CurrentLevel(level)
+FruitDropComponent::FruitDropComponent()
 {}
 
 void FruitDropComponent::Update(const float) {}
@@ -140,16 +142,15 @@ void FruitDropComponent::Update(const float) {}
 void FruitDropComponent::FixedUpdate(const float fixedDeltaTime) 
 {
 	TransformComponent* trans = m_pGameObject->GetComponent<TransformComponent>();
-	if (!m_CurrentLevel.IsWallBelow(trans->GetPosition()))
+	if (!currentLevel.IsWallBelow(trans->GetPosition()))
 		trans->SetPosition(trans->GetPosition().x, trans->GetPosition().y - fixedDeltaTime * 60.0f);
 }
 
 void FruitDropComponent::Render() const {}
 
-EnemyBehaviourComponent::EnemyBehaviourComponent(MyEngine::GameObject* pPlayer, int type, float delay):
+EnemyBehaviourComponent::EnemyBehaviourComponent(int type, float delay):
 	m_Type(type),
-	m_Delay(delay),
-	m_pPlayer(pPlayer)
+	m_Delay(delay)
 {}
 
 void EnemyBehaviourComponent::Update(const float) {}

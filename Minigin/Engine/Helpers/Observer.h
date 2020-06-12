@@ -4,14 +4,15 @@
 namespace MyEngine
 {
 	class GameObject;
-	enum class Event
+	enum Event
 	{
-		
+		e0, e1, e2, e3, e4, e5, e6, e7, e8, e9
 	};
 
-	class Observer : public Singleton<Observer>
+	template <class T>
+	class Observer : public Singleton<T>
 	{
 	public:
-		virtual void Notify(const Event event, const GameObject& object, const int value = 0) = 0;
+		virtual void Notify(const Event event, const int value = 0, const GameObject* object = nullptr) = 0;
 	};
 }

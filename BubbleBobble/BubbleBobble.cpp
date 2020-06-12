@@ -17,16 +17,20 @@ void LoadScene();
 
 int main(int, char* []) {
 	int windowWidth = 640;
-	int level = 0;
 
 	MyEngine::Minigin engine;
 	engine.Initialize("../Resources/", "Programming 4 assignment", windowWidth, windowWidth / 32 * 25, windowWidth / 32.0f);
 	MyEngine::PhysicsManager::GetInstance()->EnableDebugDrawing(true);
 	DataHolder::GetInstance()->Init(windowWidth, windowWidth / 32 * 25);
-	CreateLevel(level, windowWidth / 32 * 25);
+	CreatePlayer(1, windowWidth / 32 * 25);
+	CreatePlayer(2, windowWidth / 32 * 25);
+	CreateMenu(windowWidth / 32 * 25);
+	//CreateLevel(0, windowWidth / 32 * 25);
+	//LevelManager::GetInstance()->Notify(MyEngine::Event(LevelManager::IncreaseLevel));
 	//LoadScene();
 	engine.Run();
 	DataHolder::Release();
+	LevelManager::Release();
 	return 0;
 }
 
@@ -42,7 +46,7 @@ public:
 	}
 	void FixedUpdate(const float) override
 	{
-
+		std::cout << InputManager::GetInstance()->GetMousePos().x << " " << InputManager::GetInstance()->GetMousePos().y << std::endl;
 	}
 	void Render() const override
 	{
@@ -70,8 +74,8 @@ void LoadScene()
 	go->GetComponent<RenderComponent>()->AddTexture("background.jpg", false, false, 0, 0, 0.0f, 0, 0, { 0.5f, 0.5f }, States::IDLE);
 	scene->Add(go);
 
-	SoundEffect* sound = SoundManager::GetInstance()->LoadSoundEffect("GunShot.wav");
-	MyEngine::InputManager::GetInstance()->AddCommand({ {XINPUT_GAMEPAD_A, MyEngine::Hardware::Controller}, {VK_LBUTTON, MyEngine::Hardware::Mouse} }, new MyEngine::Command{ [sound]() { sound->Play(0); }, MyEngine::ButtonState::Pressed }, 0);
+	SoundManager::GetInstance()->LoadSoundEffect("GunShot.wav", Event(0));
+	MyEngine::InputManager::GetInstance()->AddCommand({ {XINPUT_GAMEPAD_A, MyEngine::Hardware::Controller, 0}, {VK_LBUTTON, MyEngine::Hardware::Mouse} }, new MyEngine::Command{ []() { SoundManager::GetInstance()->Notify(Event(0)); }, MyEngine::ButtonState::Pressed });
 
 	go = new MyEngine::GameObject({ 320.0f, 200.0f });
 	go->AddComponent(new RenderComponent());

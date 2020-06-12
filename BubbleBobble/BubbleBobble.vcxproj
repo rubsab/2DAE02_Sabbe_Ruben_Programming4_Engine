@@ -180,6 +180,7 @@
   <ItemGroup>
     <ClCompile Include="BubbleBobble.cpp" />
     <ClCompile Include="DataHolder.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="MyComponents.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +193,7 @@
     <ClInclude Include="Factory.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelDataParser.h" />
+    <ClInclude Include="LevelManager.h" />
     <ClInclude Include="MyComponents.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
