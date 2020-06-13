@@ -19,7 +19,7 @@ using namespace std;
 using namespace std::chrono;
 const float MyEngine::Minigin::SecPerFrame = 0.016f;
 
-void MyEngine::Minigin::Initialize(const std::string& dataPath, const char* windowTitle, const int windowWidth, const int windowHeight, const float ppm)
+void MyEngine::Minigin::Initialize(const std::string& dataPath, const char* windowTitle, const int windowWidth, const int windowHeight, const float ppm, const std::string& ignoreScene)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
@@ -40,7 +40,7 @@ void MyEngine::Minigin::Initialize(const std::string& dataPath, const char* wind
 	}
 	Renderer::GetInstance()->Init(m_pWindow, { 0, 0, 0, 255 });
 	Logger::Init();
-	InputManager::GetInstance()->Init(m_pWindow);
+	InputManager::GetInstance()->Init(m_pWindow, ignoreScene);
 	ResourceManager::GetInstance()->Init(dataPath + "Images/");
 	SoundManager::GetInstance()->Init(dataPath + "Sound/");
 	PhysicsManager::GetInstance()->Init({ 0.0f, -9.81f }, 8, 3, ppm, { 0, 255, 0, 255 });

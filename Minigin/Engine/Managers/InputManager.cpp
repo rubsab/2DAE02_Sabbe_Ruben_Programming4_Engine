@@ -12,10 +12,11 @@ MyEngine::InputManager::~InputManager()
 	DestroyMap(m_MouseMappings);
 }
 
-void MyEngine::InputManager::Init(SDL_Window* pWindow)
+void MyEngine::InputManager::Init(SDL_Window* pWindow, const std::string& ignoreScene)
 {
 	m_pWindow = pWindow;
 	m_ShouldQuit = false;
+	m_IgnoreScene = ignoreScene;
 }
 
 bool MyEngine::InputManager::ProcessSDLEvents() const
@@ -183,7 +184,7 @@ void MyEngine::InputManager::ExecuteCommands(const Hardware& hardWare, const std
 	{
 		for (const Command* command : pair.second)
 		{
-			if (IsButtonState({ pair.first.first, hardWare, pair.first.second }, command->State) && (command->SceneName.empty() || command->SceneName == SceneManager::GetInstance()->GetActiveScene()->GetName()))
+			if (IsButtonState({ pair.first.first, hardWare, pair.first.second }, command->State) && ((command->SceneName.empty() && SceneManager::GetInstance()->GetActiveScene()->GetName() != m_IgnoreScene) || command->SceneName == SceneManager::GetInstance()->GetActiveScene()->GetName()))
 				command->Action();
 		}
 	}

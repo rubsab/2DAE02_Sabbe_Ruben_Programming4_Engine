@@ -12,6 +12,7 @@ public:
 
 	void Notify(const MyEngine::Event event, const int value = 0, const MyEngine::GameObject* object = nullptr) override;
 	int GetCurrentLevel() const { return m_CurrentLevel; }
+	void IncreaseCurrentLevel() { m_CurrentLevel++; }
 private:
-	int m_CurrentLevel{ 0 };
+	int m_CurrentLevel{ -1 };
 };

@@ -42,7 +42,7 @@ inline void CreateBubble(MyEngine::GameObject* player, int playerNr, int windowH
 	bubbleObj->SetState(0);
 	bubbleObj->AddComponent(new PhysicsComponent(PhysicsComponent::PhysicsType::Kinematic, player->GetComponent<TransformComponent>()->GetPosition(), 0.0f, float(cellDimension), float(cellDimension), 1.0f, 0.3f, 0.0f));
 	bubbleObj->AddComponent(new BubbleBehaviourComponent(bool(player->GetState() % 2)));
-	player->GetComponent<PlayerMovementComponent>()->Shoot();
+	player->GetComponent<PlayerBehaviourComponent>()->Shoot();
 }
 
 inline MyEngine::GameObject* CreatePlayer(const int playerNr, const int windowHeight)
@@ -58,26 +58,28 @@ inline MyEngine::GameObject* CreatePlayer(const int playerNr, const int windowHe
 	playerObj->GetComponent<RenderComponent>()->AddTexture(ResourceManager::GetInstance()->LoadTexture(file), true, false, 1, 2, 0.1f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, 4, { 0.0f, 2.0f / 3.0f }, { 0.5f, 1.0f / 3.0f });
 	playerObj->GetComponent<RenderComponent>()->AddTexture(ResourceManager::GetInstance()->LoadTexture(file), true, false, 1, 2, 0.1f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, 5, { 0.0f, 2.0f / 3.0f }, { 0.5f, 1.0f / 3.0f }, { 0.0f, 0.0f }, true);
 	playerObj->AddComponent(new PhysicsComponent(PhysicsComponent::PhysicsType::Kinematic, { cellDimension * 3.0f, cellDimension * 20.0f }, 0.0f, float(cellDimension), float(cellDimension), 1.0f, 0.3f, 0.0f));
-	playerObj->AddComponent(new PlayerMovementComponent());
+	playerObj->AddComponent(new PlayerBehaviourComponent());
 	playerObj->SetState(2);
 	DataHolder::GetInstance()->AddPlayer(playerObj);
 
 	switch (playerNr)
 	{
 	case(1):
+		playerObj->AddComponent(new TextComponent("0", ResourceManager::GetInstance()->LoadFont("slkscr.ttf", 32), { 0, 255, 0, 255 }, { 1.0f, 1.0f }, 0.0f, {(windowHeight * 32 / 25) - playerObj->GetComponent<TransformComponent>()->GetPosition().x, windowHeight - playerObj->GetComponent<TransformComponent>()->GetPosition().y}));
 		InputManager::GetInstance()->AddCommand({ {'D', Hardware::KeyBoard}, {XINPUT_GAMEPAD_DPAD_RIGHT, Hardware::Controller, 0} }, new Command{ [playerObj]() {playerObj->SetState(0); }, ButtonState::Down });
 		InputManager::GetInstance()->AddCommand({ {'A', Hardware::KeyBoard}, {XINPUT_GAMEPAD_DPAD_LEFT, Hardware::Controller, 0} }, new Command{ [playerObj]() {playerObj->SetState(1); }, ButtonState::Down });
 		InputManager::GetInstance()->AddCommand({ {'D', Hardware::KeyBoard}, {XINPUT_GAMEPAD_DPAD_RIGHT, Hardware::Controller, 0} }, new Command{ [playerObj]() {playerObj->SetState(2); }, ButtonState::Released });
 		InputManager::GetInstance()->AddCommand({ {'A', Hardware::KeyBoard}, {XINPUT_GAMEPAD_DPAD_LEFT, Hardware::Controller, 0} }, new Command{ [playerObj]() {playerObj->SetState(3); }, ButtonState::Released });
-		InputManager::GetInstance()->AddCommand({ {'W', Hardware::KeyBoard}, {XINPUT_GAMEPAD_A, Hardware::Controller, 0} }, new Command{ [playerObj]() {playerObj->GetComponent<PlayerMovementComponent>()->Jump(); }, ButtonState::Pressed });
+		InputManager::GetInstance()->AddCommand({ {'W', Hardware::KeyBoard}, {XINPUT_GAMEPAD_A, Hardware::Controller, 0} }, new Command{ [playerObj]() {playerObj->GetComponent<PlayerBehaviourComponent>()->Jump(); }, ButtonState::Pressed });
 		InputManager::GetInstance()->AddCommand({ {VK_SPACE, Hardware::KeyBoard}, {XINPUT_GAMEPAD_X, Hardware::Controller, 0} }, new Command{ [playerObj, windowHeight]() {CreateBubble(playerObj, 0, windowHeight); }, ButtonState::Pressed });
 		break;
 	case(2):
+		playerObj->AddComponent(new TextComponent("0", ResourceManager::GetInstance()->LoadFont("slkscr.ttf", 32), { 0, 0, 255, 255 }, { 1.0f, 0.0f }, 0.0f, {-playerObj->GetComponent<TransformComponent>()->GetPosition().x, windowHeight - playerObj->GetComponent<TransformComponent>()->GetPosition().y}));
 		InputManager::GetInstance()->AddCommand({ {VK_RIGHT, Hardware::KeyBoard}, {XINPUT_GAMEPAD_DPAD_RIGHT, Hardware::Controller, 1} }, new Command{ [playerObj]() {playerObj->SetState(0); }, ButtonState::Down });
 		InputManager::GetInstance()->AddCommand({ {VK_LEFT, Hardware::KeyBoard}, {XINPUT_GAMEPAD_DPAD_LEFT, Hardware::Controller, 1} }, new Command{ [playerObj]() {playerObj->SetState(1); }, ButtonState::Down });
 		InputManager::GetInstance()->AddCommand({ {VK_RIGHT, Hardware::KeyBoard}, {XINPUT_GAMEPAD_DPAD_RIGHT, Hardware::Controller, 1} }, new Command{ [playerObj]() {playerObj->SetState(2); }, ButtonState::Released });
 		InputManager::GetInstance()->AddCommand({ {VK_LEFT, Hardware::KeyBoard}, {XINPUT_GAMEPAD_DPAD_LEFT, Hardware::Controller, 1} }, new Command{ [playerObj]() {playerObj->SetState(3); }, ButtonState::Released });
-		InputManager::GetInstance()->AddCommand({ {VK_UP, Hardware::KeyBoard}, {XINPUT_GAMEPAD_A, Hardware::Controller, 1} }, new Command{ [playerObj]() {playerObj->GetComponent<PlayerMovementComponent>()->Jump(); }, ButtonState::Pressed });
+		InputManager::GetInstance()->AddCommand({ {VK_UP, Hardware::KeyBoard}, {XINPUT_GAMEPAD_A, Hardware::Controller, 1} }, new Command{ [playerObj]() {playerObj->GetComponent<PlayerBehaviourComponent>()->Jump(); }, ButtonState::Pressed });
 		InputManager::GetInstance()->AddCommand({ {VK_NUMPAD0, Hardware::KeyBoard}, {XINPUT_GAMEPAD_X, Hardware::Controller, 1} }, new Command{ [playerObj, windowHeight]() {CreateBubble(playerObj, 1, windowHeight); }, ButtonState::Pressed });
 		break;
 	default:
@@ -94,7 +96,7 @@ inline MyEngine::GameObject* CreateFruitDrop(int enemyType, const glm::fvec2& po
 	fruitDrop->AddComponent(new RenderComponent());
 	fruitDrop->GetComponent<RenderComponent>()->AddTexture("drops.png", false, false, 0, 0, 0.0f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, -1, { 0.0f, 0.125f * enemyType }, { 1.0f, 0.125f });
 	fruitDrop->AddComponent(new PhysicsComponent(PhysicsComponent::PhysicsType::Kinematic, pos, 0.0f, float(cellDimension), float(cellDimension), 1.0f, 0.3f, 0.0f));
-	fruitDrop->AddComponent(new FruitDropComponent());
+	fruitDrop->AddComponent(new FruitDropComponent(enemyType));
 	return fruitDrop;
 }
 
@@ -112,14 +114,21 @@ inline void CreateLevel(int levelNr, const int windowHeight, float delay)
 	int cellDimension = windowHeight / 25;
 	std::vector<GameObject*>& players = DataHolder::GetInstance()->GetPlayers();
 	for (GameObject* pPlayer : players)
-		levelScene->Add(pPlayer);
+		levelScene->Add(pPlayer, -2.0f);
 
 	levelScene->Invoke(
-		[players, windowHeight, cellDimension](){
+		[level, levelScene, players, windowHeight, cellDimension]()
+		{
 			players[0]->GetComponent<TransformComponent>()->SetPosition(cellDimension * 4.0f, cellDimension * 3.0f);
 			players[0]->SetState(2);
 			players[1]->GetComponent<TransformComponent>()->SetPosition((windowHeight * 32 / 25) - cellDimension * 4.0f, cellDimension * 3.0f);
-			players[1]->SetState(3);}
+			players[1]->SetState(3);
+			LevelManager::GetInstance()->IncreaseCurrentLevel();
+			for (const Enemy& enemy : level.Enemies)
+			{
+				levelScene->Add(CreateEnemy(enemy, windowHeight));
+			}
+		}
 		, 0.0f);
 
 	levelObj->AddComponent(new TextComponent(std::to_string(levelNr), ResourceManager::GetInstance()->LoadFont("slkscr.ttf", 32), { 255, 255, 255, 255 }, { 0.0f, 0.0f }, 0.0f, { -2.0f, float(windowHeight) + 5.0f}));
@@ -174,11 +183,6 @@ inline void CreateLevel(int levelNr, const int windowHeight, float delay)
 				hasWall = false;
 			}
 		}
-	}
-
-	for (const Enemy& enemy : level.Enemies)
-	{
-		levelScene->Add(CreateEnemy(enemy, windowHeight));
 	}
 }
 

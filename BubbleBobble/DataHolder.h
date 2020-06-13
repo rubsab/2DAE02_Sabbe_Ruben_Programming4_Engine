@@ -18,9 +18,11 @@ public:
 	std::vector<MyEngine::GameObject*>& GetPlayers() { return m_Players; }
 	void AddPlayer(MyEngine::GameObject* player) { m_Players.push_back(player); }
 	void RemoveAllPlayers() { m_Players.clear(); }
+	int GetScore(int index) const { return m_Scores[index]; }
 private:
 	std::vector<Level> m_Levels;
 	std::vector<MyEngine::GameObject*> m_Enemies;
 	std::vector<MyEngine::GameObject*> m_Players;
+	int m_Scores[8] = { 1, 4, 2, 5, 6, 8, 3, 7 };
 };
 

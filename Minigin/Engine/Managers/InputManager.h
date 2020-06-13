@@ -57,7 +57,7 @@ namespace MyEngine
 	public:
 		InputManager() = default;
 		~InputManager();
-		void Init(SDL_Window* pWindow);
+		void Init(SDL_Window* pWindow, const std::string& ignoreScene);
 		bool ProcessSDLEvents() const;
 		void ProcessInput();
 		bool IsButtonState(const Button& button, const ButtonState& buttonState);
@@ -82,6 +82,7 @@ namespace MyEngine
 		SDL_Window* m_pWindow = nullptr;
 		SDL_Point m_MousePos, m_OldMousePos;
 		bool m_ShouldQuit;
+		std::string m_IgnoreScene;
 	};
 
 }

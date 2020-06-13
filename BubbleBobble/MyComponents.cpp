@@ -10,15 +10,27 @@
 #include "Engine\Scene\Scene.h"
 #include "Factory.h"
 
-PlayerMovementComponent::PlayerMovementComponent() :
+inline glm::fvec2 ScreenBordersCheck(const glm::fvec2& pos)
+{
+	glm::fvec2 newPos = pos;
+	const Level& level = DataHolder::GetInstance()->GetLevel(LevelManager::GetInstance()->GetCurrentLevel());
+	if (newPos.y > level.WindowHeight)
+		newPos.y -= level.WindowHeight;
+	if (newPos.y < 0.0f)
+		newPos.y += level.WindowHeight;
+	return newPos;
+}
+
+PlayerBehaviourComponent::PlayerBehaviourComponent() :
 	m_JumpTime(0.0f),
-	m_ShootTime(0.0f)
+	m_ShootTime(0.0f),
+	m_Score(0)
 {
 }
 
-void PlayerMovementComponent::Update(const float) {}
+void PlayerBehaviourComponent::Update(const float) {}
 
-void PlayerMovementComponent::FixedUpdate(const float fixedDeltaTime)
+void PlayerBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 {
 	int state = m_pGameObject->GetState();
 	MyEngine::TransformComponent* trans = m_pGameObject->GetComponent<MyEngine::TransformComponent>();
@@ -47,17 +59,26 @@ void PlayerMovementComponent::FixedUpdate(const float fixedDeltaTime)
 	}
 	else if (!currentLevel.IsWallBelow(trans->GetPosition()))
 		trans->SetPosition(trans->GetPosition().x, trans->GetPosition().y - fixedDeltaTime * 94.0f);
+	trans->SetPosition(ScreenBordersCheck(trans->GetPosition()));
+
+	std::string score = std::to_string(m_Score);
+	m_pGameObject->GetComponent<TextComponent>()->SetText(score);
+	if (m_pGameObject == DataHolder::GetInstance()->GetPlayers()[0])
+		m_pGameObject->GetComponent<TextComponent>()->SetOffSet({ currentLevel.WindowWidth - trans->GetPosition().x - 45.0f - (score.size() - 1) * 44.f, currentLevel.WindowHeight - trans->GetPosition().y - 25.0f });
+	else
+		m_pGameObject->GetComponent<TextComponent>()->SetOffSet({ currentLevel.WindowWidth - trans->GetPosition().x - 45.0f - (score.size() - 1) * 44.f, -trans->GetPosition().y + 25.0f });
+	//m_pGameObject->GetComponent<TextComponent>()->SetOffSet({ (score.size() - 1) * - 44.f, 0.0f });
 }
 
-void PlayerMovementComponent::Render() const {}
+void PlayerBehaviourComponent::Render() const {}
 
-void PlayerMovementComponent::Jump()
+void PlayerBehaviourComponent::Jump()
 {
 	if (currentLevel.IsWallBelow(m_pGameObject->GetComponent<MyEngine::TransformComponent>()->GetPosition()))
 		m_JumpTime += 0.51f;
 }
 
-void PlayerMovementComponent::Shoot()
+void PlayerBehaviourComponent::Shoot()
 {
 	m_ShootTime = 0.25f;
 	m_pGameObject->SetState((m_pGameObject->GetState() % 2) + 4);
@@ -97,6 +118,7 @@ void BubbleBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 	{
 		m_SidewaysTimer = 0.f;
 		trans->SetPosition(trans->GetPosition().x, trans->GetPosition().y + fixedDeltaTime * 50.0f);
+		trans->SetPosition(ScreenBordersCheck(trans->GetPosition()));
 	}
 
 	if (m_pGameObject->GetState() == 1)
@@ -134,7 +156,8 @@ void BubbleBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 
 void BubbleBehaviourComponent::Render() const {}
 
-FruitDropComponent::FruitDropComponent()
+FruitDropComponent::FruitDropComponent(int enemyType):
+	m_Score(DataHolder::GetInstance()->GetScore(enemyType) * 1000)
 {}
 
 void FruitDropComponent::Update(const float) {}
@@ -143,7 +166,19 @@ void FruitDropComponent::FixedUpdate(const float fixedDeltaTime)
 {
 	TransformComponent* trans = m_pGameObject->GetComponent<TransformComponent>();
 	if (!currentLevel.IsWallBelow(trans->GetPosition()))
+	{
 		trans->SetPosition(trans->GetPosition().x, trans->GetPosition().y - fixedDeltaTime * 60.0f);
+		trans->SetPosition(ScreenBordersCheck(trans->GetPosition()));
+	}
+	for (GameObject* pPlayer : DataHolder::GetInstance()->GetPlayers())
+	{
+		if (m_pGameObject->GetComponent<PhysicsComponent>()->IsOverlapping(pPlayer->GetComponent<PhysicsComponent>()))
+		{
+			pPlayer->GetComponent<PlayerBehaviourComponent>()->IncreaseScore(m_Score);
+			m_pGameObject->SetShouldDespawn(true);
+		}
+	}
+
 }
 
 void FruitDropComponent::Render() const {}

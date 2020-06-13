@@ -19,7 +19,7 @@ int main(int, char* []) {
 	int windowWidth = 640;
 
 	MyEngine::Minigin engine;
-	engine.Initialize("../Resources/", "Programming 4 assignment", windowWidth, windowWidth / 32 * 25, windowWidth / 32.0f);
+	engine.Initialize("../Resources/", "Programming 4 assignment", windowWidth, windowWidth / 32 * 25, windowWidth / 32.0f, "MenuScene");
 	MyEngine::PhysicsManager::GetInstance()->EnableDebugDrawing(true);
 	DataHolder::GetInstance()->Init(windowWidth, windowWidth / 32 * 25);
 	CreatePlayer(1, windowWidth / 32 * 25);

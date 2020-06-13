@@ -18,6 +18,7 @@ namespace MyEngine
 
 		TextComponent(const std::string& text, Font* font, SDL_Color color, const glm::fvec2& pivot = { 0.5f, 0.5f }, const float angle = 0.0f, const glm::fvec2& offSet = { 0.0f, 0.0f });
 
+		void SetOffSet(const glm::fvec2& offSet) { m_Offset = offSet; }
 		//Getters & Setters
 		Texture2D* GetTexture() const;
 		void SetText(const std::string& text);
