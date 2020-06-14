@@ -98,7 +98,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;$(SolutionDir)3rdParty/VisualLeakDetector/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,7 +121,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;$(SolutionDir)3rdParty/VisualLeakDetector/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,7 +141,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;$(SolutionDir)3rdParty/VisualLeakDetector/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,7 +165,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;$(SolutionDir)3rdParty/VisualLeakDetector/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
