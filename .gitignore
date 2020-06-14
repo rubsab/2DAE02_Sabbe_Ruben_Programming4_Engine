@@ -13,6 +13,5 @@ Minigin/Win32/Release/
 *.obj
 *.exe
 *.ilk
-*.dll
 *.txt
 *.log
