@@ -27,7 +27,7 @@ PlayerBehaviourComponent::PlayerBehaviourComponent() :
 	m_JumpTime(0.0f),
 	m_ShootTime(0.0f),
 	m_Score(0),
-	m_Lives(3)
+	m_Lives(4)
 {
 }
 
@@ -113,7 +113,7 @@ void PlayerBehaviourComponent::Damage()
 void PlayerBehaviourComponent::Reset()
 {
 	m_Score = 0;
-	m_Lives = 3;
+	m_Lives = 4;
 }
 
 BubbleBehaviourComponent::BubbleBehaviourComponent(bool isLookingLeft) :
