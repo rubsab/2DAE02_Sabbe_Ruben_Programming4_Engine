@@ -15,5 +15,5 @@ public:
 	int GetCurrentLevel() const { return m_CurrentLevel; }
 	void IncreaseCurrentLevel() { m_CurrentLevel++; }
 private:
-	int m_CurrentLevel{ -1 };
+	int m_CurrentLevel{ 5 };
 };

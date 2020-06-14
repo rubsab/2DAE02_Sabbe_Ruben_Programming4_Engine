@@ -44,7 +44,7 @@ void MyEngine::TextComponent::Render() const
 	SDL_Rect dstRect{ static_cast<int>(pos.x), static_cast<int>(pos.y) };
 	SDL_QueryTexture(m_pTexture->GetSDLTexture(), nullptr, nullptr, &dstRect.w, &dstRect.h);
 	SDL_Point pivot = { int(m_Pivot.x * dstRect.w), int(m_Pivot.y * dstRect.h) };
-	glm::fvec2 worldOffset = { m_Offset.x * dstRect.w, m_Offset.y * dstRect.h };
+	glm::fvec2 worldOffset = { m_Offset.x, m_Offset.y };
 	worldOffset = glm::rotate(worldOffset, -m_pGameObject->GetComponent<TransformComponent>()->GetRotation() * float(M_PI) / 180.0f);
 	dstRect.x += -pivot.x + int(worldOffset.x);
 	dstRect.y += pivot.y + int(worldOffset.y);

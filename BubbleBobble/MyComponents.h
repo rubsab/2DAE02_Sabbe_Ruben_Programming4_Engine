@@ -17,9 +17,11 @@ public:
 
 	void Jump();
 	void Shoot();
+	void Damage();
+	void Reset();
 private:
 	float m_JumpTime, m_ShootTime;
-	int m_Score;
+	int m_Score, m_Lives;
 };
 
 class BubbleBehaviourComponent final : public MyEngine::BaseComponent
@@ -59,6 +61,17 @@ private:
 	void Jump();
 	void SearchPlayer();
 	int m_Type;
-	float m_Delay, m_JumpTime;
+	float m_Delay, m_JumpTime, m_AttackCooldown;
 	MyEngine::GameObject* m_ClosestPlayer;
+};
+
+class RockComponent final : public MyEngine::BaseComponent
+{
+public:
+	RockComponent(bool isGoingLeft);
+	void Update(const float) override;
+	void FixedUpdate(const float fixedDeltaTime) override;
+	void Render() const override;
+private:
+	bool m_IsGoingLeft;
 };

@@ -56,5 +56,5 @@ void MyEngine::PhysicsComponent::Render() const
 
 bool MyEngine::PhysicsComponent::IsOverlapping(const PhysicsComponent* other) const
 {
-	return b2TestOverlap(m_pBody->GetFixtureList()[0].GetShape(), 0, other->m_pBody->GetFixtureList()[0].GetShape(), 0, m_pBody->GetTransform(), other->m_pBody->GetTransform());
+ 	return b2TestOverlap(m_pBody->GetFixtureList()[0].GetShape(), 0, other->m_pBody->GetFixtureList()[0].GetShape(), 0, m_pBody->GetTransform(), other->m_pBody->GetTransform());
 }

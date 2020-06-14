@@ -25,19 +25,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LevelManager.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LevelDataParser.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Level.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Factory.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="DataHolder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,6 +36,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LevelManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelDataParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

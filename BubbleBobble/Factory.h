@@ -25,6 +25,10 @@ inline MyEngine::GameObject* CreateEnemy(const Enemy& enemy, const int windowHei
 	enemyObj->AddComponent(new RenderComponent());
 	enemyObj->GetComponent<RenderComponent>()->AddTexture("Enemy.png", true, false, 1, 4, 0.25f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, 0, { 0.0f, int(enemy.Type) / 8.0f }, { 1.0f, 0.125 });
 	enemyObj->GetComponent<RenderComponent>()->AddTexture("Enemy.png", true, false, 1, 4, 0.25f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, 1, { 0.0f, int(enemy.Type) / 8.0f }, { 1.0f, 0.125 }, { 0.0f, 0.0f }, true);
+	enemyObj->GetComponent<RenderComponent>()->AddTexture("Enemy.png", true, false, 1, 4, 0.25f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, 2, { 0.0f, int(enemy.Type) / 8.0f }, { 1.0f, 0.125 });
+	enemyObj->GetComponent<RenderComponent>()->AddTexture("Enemy.png", true, false, 1, 4, 0.25f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, 3, { 0.0f, int(enemy.Type) / 8.0f }, { 1.0f, 0.125 }, { 0.0f, 0.0f }, true);
+	enemyObj->GetComponent<RenderComponent>()->AddTexture("Enemy.png", true, false, 1, 4, 0.25f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, 4, { 0.0f, int(enemy.Type) / 8.0f }, { 1.0f, 0.125 });
+	enemyObj->GetComponent<RenderComponent>()->AddTexture("Enemy.png", true, false, 1, 4, 0.25f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, 5, { 0.0f, int(enemy.Type) / 8.0f }, { 1.0f, 0.125 }, { 0.0f, 0.0f }, true);
 	enemyObj->SetState(0);
 	enemyObj->AddComponent(new PhysicsComponent(PhysicsComponent::PhysicsType::Kinematic, { cellDimension + enemy.Col * cellDimension, windowHeight - (cellDimension + (enemy.Row + 2) * cellDimension) }, 0.0f, float(cellDimension), float(cellDimension), 1.0f, 0.3f, 0.0f));
 	enemyObj->AddComponent(new EnemyBehaviourComponent(int(enemy.Type), enemy.Delay));
@@ -192,16 +196,38 @@ inline void CreateMenu(int windowHeight)
 	CreatePlayer(1, windowHeight);
 	CreatePlayer(2, windowHeight);
 	Scene* pMenuScene = new Scene("MenuScene");
-	GameObject* pImage = new GameObject();
-	pImage->AddComponent(new RenderComponent());
-	pImage->GetComponent<RenderComponent>()->AddTexture("BackGround.png", false, false, 0, 0, 0.0f, 640, 500, { 0.0f, 1.0f });
-	pMenuScene->Add(pImage);
+	GameObject* pObj = new GameObject();
+	pObj->AddComponent(new RenderComponent());
+	pObj->GetComponent<RenderComponent>()->AddTexture("BackGround.png", false, false, 0, 0, 0.0f, 640, 500, { 0.0f, 1.0f });
+	pObj->AddComponent(new TextComponent("Press LB/1 for 1 player", ResourceManager::GetInstance()->LoadFont("slkscr2.ttf", 20), { 255, 255, 0, 255 }, { 0.5f, 0.5f }, 0.0f, { 320.0f, 120.0f }));
+	pMenuScene->Add(pObj);
+
+	pObj = new GameObject();
+	pObj->AddComponent(new TextComponent("Press RB/2 for 2 players", ResourceManager::GetInstance()->LoadFont("slkscr2.ttf", 20), { 255, 255, 0, 255 }, { 0.5f, 0.5f }, 0.0f, { 320.0f, 80.0f }));
+	pMenuScene->Add(pObj);
+
+	pObj = new GameObject();
+	pObj->AddComponent(new TextComponent("Press Start/Esc to quit", ResourceManager::GetInstance()->LoadFont("slkscr2.ttf", 20), { 255, 255, 0, 255 }, { 0.5f, 0.5f }, 0.0f, { 320.0f, 40.0f }));
+	pMenuScene->Add(pObj);
 	InputManager::GetInstance()->AddCommand({ {VK_ESCAPE, Hardware::KeyBoard}, {XINPUT_GAMEPAD_START, Hardware::Controller, 0}, {XINPUT_GAMEPAD_START, Hardware::Controller, 1} }, new Command{ []() { InputManager::GetInstance()->Quit(); }, ButtonState::Pressed, "MenuScene" });
 	InputManager::GetInstance()->AddCommand({ {VK_ESCAPE, Hardware::KeyBoard}, {XINPUT_GAMEPAD_START, Hardware::Controller, 0}, {XINPUT_GAMEPAD_START, Hardware::Controller, 1} }, new Command{ []() {LevelManager::GetInstance()->Notify(MyEngine::Event(LevelManager::LevelManagerEvent::GoBackToMenu)); }, ButtonState::Pressed, "" });
-	InputManager::GetInstance()->AddCommand({ {'1', Hardware::KeyBoard }, {XINPUT_GAMEPAD_LEFT_SHOULDER, Hardware::Controller, 0} }, new Command{ [windowHeight]() {DataHolder::GetInstance()->GetPlayers().back()->SetActive(false); CreateLevel(0, windowHeight, 0.0f); }, ButtonState::Pressed, "MenuScene" });
-	InputManager::GetInstance()->AddCommand({ {'2', Hardware::KeyBoard }, {XINPUT_GAMEPAD_RIGHT_SHOULDER, Hardware::Controller, 0}, {XINPUT_GAMEPAD_RIGHT_SHOULDER, Hardware::Controller, 1} }, new Command{ [windowHeight]() {DataHolder::GetInstance()->GetPlayers().back()->SetActive(true); CreateLevel(0, windowHeight, 0.0f); }, ButtonState::Pressed, "MenuScene" });
+	InputManager::GetInstance()->AddCommand({ {'1', Hardware::KeyBoard }, {XINPUT_GAMEPAD_LEFT_SHOULDER, Hardware::Controller, 0} }, new Command{ [windowHeight]() {DataHolder::GetInstance()->GetPlayers()[0]->SetActive(true); DataHolder::GetInstance()->GetPlayers()[1]->SetActive(false); CreateLevel(6, windowHeight, 0.0f); }, ButtonState::Pressed, "MenuScene" });
+	InputManager::GetInstance()->AddCommand({ {'2', Hardware::KeyBoard }, {XINPUT_GAMEPAD_RIGHT_SHOULDER, Hardware::Controller, 0}, {XINPUT_GAMEPAD_RIGHT_SHOULDER, Hardware::Controller, 1} }, new Command{ [windowHeight]() {DataHolder::GetInstance()->GetPlayers()[0]->SetActive(true); DataHolder::GetInstance()->GetPlayers()[1]->SetActive(true); CreateLevel(0, windowHeight, 0.0f); }, ButtonState::Pressed, "MenuScene" });
 	InputManager::GetInstance()->AddCommand({ {'R', Hardware::KeyBoard } }, new Command{ []() {LevelManager::GetInstance()->Notify(MyEngine::Event(LevelManager::LevelManagerEvent::ReloadLevel)); }, ButtonState::Pressed, "" });
 	SceneManager::GetInstance()->AddScene(pMenuScene);
+}
+
+inline void CreateRock(const glm::fvec2 pos, bool isGoingLeft)
+{
+	int cellDimension = currentLevel.WindowHeight / 25;
+	GameObject* pRock = new GameObject();
+	pRock->AddComponent(new RenderComponent());
+	pRock->GetComponent<RenderComponent>()->AddTexture("Projectiles.png", true, false, 1, 4, 0.25f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, 0, { 0.0f, 0.0f }, { 1.0f, 0.25f });
+	pRock->GetComponent<RenderComponent>()->AddTexture("Projectiles.png", true, true, 1, 4, 0.25f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, 1, { 0.0f, 0.0f }, { 1.0f, 0.25f });
+	pRock->AddComponent(new PhysicsComponent(PhysicsComponent::PhysicsType::Kinematic, pos, 0.0f, float(cellDimension), float(cellDimension), 1.0f, 0.3f, 0.0f));
+	pRock->AddComponent(new RockComponent(isGoingLeft));
+	pRock->SetState(isGoingLeft);
+	SceneManager::GetInstance()->GetActiveScene()->Add(pRock);
 }
 
 enum SoundEvents

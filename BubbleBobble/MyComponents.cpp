@@ -26,7 +26,8 @@ inline glm::fvec2 ScreenBordersCheck(const glm::fvec2& pos)
 PlayerBehaviourComponent::PlayerBehaviourComponent() :
 	m_JumpTime(0.0f),
 	m_ShootTime(0.0f),
-	m_Score(0)
+	m_Score(0),
+	m_Lives(3)
 {
 }
 
@@ -63,13 +64,12 @@ void PlayerBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 		trans->SetPosition(trans->GetPosition().x, trans->GetPosition().y - fixedDeltaTime * 94.0f);
 	trans->SetPosition(ScreenBordersCheck(trans->GetPosition()));
 
-	std::string score = std::to_string(m_Score);
+	std::string score = std::to_string(m_Score) + " " + std::to_string(m_Lives);
 	m_pGameObject->GetComponent<TextComponent>()->SetText(score);
 	if (m_pGameObject == DataHolder::GetInstance()->GetPlayers()[0])
-		m_pGameObject->GetComponent<TextComponent>()->SetOffSet({ currentLevel.WindowWidth - trans->GetPosition().x - 45.0f - (score.size() - 1) * 44.f, currentLevel.WindowHeight - trans->GetPosition().y - 25.0f });
+		m_pGameObject->GetComponent<TextComponent>()->SetOffSet({ currentLevel.WindowWidth - trans->GetPosition().x, currentLevel.WindowHeight - trans->GetPosition().y - 25.0f });
 	else
-		m_pGameObject->GetComponent<TextComponent>()->SetOffSet({ currentLevel.WindowWidth - trans->GetPosition().x - 45.0f - (score.size() - 1) * 44.f, -trans->GetPosition().y + 25.0f });
-	//m_pGameObject->GetComponent<TextComponent>()->SetOffSet({ (score.size() - 1) * - 44.f, 0.0f });
+		m_pGameObject->GetComponent<TextComponent>()->SetOffSet({ currentLevel.WindowWidth - trans->GetPosition().x, -trans->GetPosition().y + 25.0f });
 }
 
 void PlayerBehaviourComponent::Render() const {}
@@ -90,7 +90,33 @@ void PlayerBehaviourComponent::Shoot()
 	MyEngine::SoundManager::GetInstance()->Notify(MyEngine::Event(SoundEvents::BubbleFire));
 }
 
-BubbleBehaviourComponent::BubbleBehaviourComponent(bool isLookingLeft):
+void PlayerBehaviourComponent::Damage()
+{
+	m_Lives--;
+	if (m_Lives <= 0)
+	{
+		m_pGameObject->SetActive(false);
+		for (GameObject* pPlayer : DataHolder::GetInstance()->GetPlayers())
+		{
+			if (pPlayer != m_pGameObject && !pPlayer->IsActive())
+			{
+				LevelManager::GetInstance()->Notify(MyEngine::Event(LevelManager::LevelManagerEvent::GoBackToMenu));
+				pPlayer->GetComponent<PlayerBehaviourComponent>()->Reset();
+				Reset();
+				return;
+			}
+		}
+	}
+	LevelManager::GetInstance()->Notify(MyEngine::Event(LevelManager::LevelManagerEvent::ReloadLevel));
+}
+
+void PlayerBehaviourComponent::Reset()
+{
+	m_Score = 0;
+	m_Lives = 3;
+}
+
+BubbleBehaviourComponent::BubbleBehaviourComponent(bool isLookingLeft) :
 	m_SidewaysTimer(0.3f),
 	m_IsDirLeft(isLookingLeft),
 	m_LifeTime(5.0f),
@@ -162,14 +188,14 @@ void BubbleBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 
 void BubbleBehaviourComponent::Render() const {}
 
-FruitDropComponent::FruitDropComponent(int enemyType):
+FruitDropComponent::FruitDropComponent(int enemyType) :
 	m_Score(DataHolder::GetInstance()->GetScore(enemyType) * 1000),
 	m_HitTimer(1.0f)
 {}
 
 void FruitDropComponent::Update(const float) {}
 
-void FruitDropComponent::FixedUpdate(const float fixedDeltaTime) 
+void FruitDropComponent::FixedUpdate(const float fixedDeltaTime)
 {
 	m_HitTimer -= fixedDeltaTime;
 	TransformComponent* trans = m_pGameObject->GetComponent<TransformComponent>();
@@ -194,7 +220,7 @@ void FruitDropComponent::FixedUpdate(const float fixedDeltaTime)
 
 void FruitDropComponent::Render() const {}
 
-EnemyBehaviourComponent::EnemyBehaviourComponent(int type, float delay):
+EnemyBehaviourComponent::EnemyBehaviourComponent(int type, float delay) :
 	m_Type(type),
 	m_Delay(delay)
 {
@@ -204,7 +230,8 @@ void EnemyBehaviourComponent::Update(const float) {}
 
 void EnemyBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 {
-	if(!m_ClosestPlayer)
+	m_AttackCooldown -= fixedDeltaTime;
+	if (!m_ClosestPlayer)
 		SearchPlayer();
 	m_Delay -= fixedDeltaTime;
 	if (m_Delay >= 0.0f)
@@ -212,6 +239,56 @@ void EnemyBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 	TransformComponent* closestTrans = m_ClosestPlayer->GetComponent<TransformComponent>();
 	TransformComponent* trans = m_pGameObject->GetComponent<TransformComponent>();
 	int state = m_pGameObject->GetState();
+	//Attack
+	float horDist;
+	switch (m_Type)
+	{
+	default:
+	case(EnemyType::ZenChan):
+		switch (state)
+		{
+		case(0):
+		case(1):
+			horDist = (closestTrans->GetPosition().x - trans->GetPosition().x) * (state * 2 - 1);
+			if (horDist < 30.0f && horDist > 0.0f && abs(trans->GetPosition().y - closestTrans->GetPosition().y) < 5.0f)
+			{
+				if (m_AttackCooldown <= 0.0f)
+				{
+					m_ClosestPlayer->GetComponent<PlayerBehaviourComponent>()->Damage();
+					SearchPlayer();
+					m_pGameObject->SetState(m_pGameObject->GetState() % 4);
+				}
+				return;
+			}
+			break;
+		default:
+			break;
+		}
+		break;
+	case(EnemyType::Mighta):
+		switch (state)
+		{
+		case(0):
+		case(1):
+			horDist = (trans->GetPosition().x - closestTrans->GetPosition().x) * (state * 2 - 1);
+			if (horDist < 120.0f && horDist > 0.0f && abs(trans->GetPosition().y - closestTrans->GetPosition().y) < 5.0f)
+			{
+				if (m_AttackCooldown <= 0.0f)
+				{
+					CreateRock(trans->GetPosition(), bool(state));
+					SearchPlayer();
+					m_pGameObject->SetState(m_pGameObject->GetState() % 4);
+					m_AttackCooldown = 1.5f;
+				}
+				return;
+			}
+			break;
+		default:
+			break;
+		}
+		break;
+	}
+
 	//Movement
 	switch (m_Type)
 	{
@@ -250,8 +327,6 @@ void EnemyBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 		break;
 	}
 	trans->SetPosition(ScreenBordersCheck(trans->GetPosition()));
-
-	//Attack
 }
 
 void EnemyBehaviourComponent::Render() const {}
@@ -272,4 +347,40 @@ void EnemyBehaviourComponent::SearchPlayer()
 		m_pGameObject->SetState(5);
 	else
 		m_pGameObject->SetState(4);
+}
+
+RockComponent::RockComponent(bool isGoingLeft)
+	:m_IsGoingLeft(isGoingLeft)
+{
+}
+
+void RockComponent::Update(const float)
+{
+}
+
+void RockComponent::FixedUpdate(const float fixedDeltaTime)
+{
+	for (GameObject* pPlayer : DataHolder::GetInstance()->GetPlayers())
+	{
+		if (m_pGameObject->GetComponent<PhysicsComponent>()->IsOverlapping(pPlayer->GetComponent<PhysicsComponent>()))
+		{
+			m_pGameObject->SetShouldDespawn(true);
+			pPlayer->GetComponent<PlayerBehaviourComponent>()->Damage();
+			return;
+		}
+	}
+	TransformComponent* trans = m_pGameObject->GetComponent<TransformComponent>();
+	if (!currentLevel.IsWallBelow(trans->GetPosition()))
+	{
+		trans->SetPosition(trans->GetPosition().x, trans->GetPosition().y - fixedDeltaTime * 60.0f);
+		trans->SetPosition(ScreenBordersCheck(trans->GetPosition()));
+		return;
+	}
+	if (currentLevel.IsWallInFront(trans->GetPosition(), m_IsGoingLeft))
+		m_pGameObject->SetShouldDespawn(true);
+	trans->SetPosition(trans->GetPosition().x + -(m_IsGoingLeft * 2 - 1) * fixedDeltaTime * 90.0f, trans->GetPosition().y);
+}
+
+void RockComponent::Render() const
+{
 }
