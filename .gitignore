@@ -3,15 +3,12 @@ Minigin/x64/Debug/
 Minigin/x64/Release/
 Minigin/Win32/Release/
 x64/Debug/
-x64/Release/
 Win32/Debug/
-Win32/Release/
 .vs/
 *.pdb
 *.idb
 *.tlog
 *.obj
-*.exe
 *.ilk
 *.txt
 *.log
