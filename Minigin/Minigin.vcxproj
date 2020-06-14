@@ -115,7 +115,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x86\*.dll" "$(OutputPath)" /R /Y</C
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x86;$(SolutionDir)3rdParty\SDL2\lib\x86;$(SolutionDir)3rdParty\SDL2_image\lib\x86;$(SolutionDir)3rdParty\Box2D\lib\x86;$(SolutionDir)3rdParty\SDL2_mixer\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;box2d_d.lib;%(AdditionalDependencies);SDL2_mixer.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;vld.lib;box2d_d.lib;%(AdditionalDependencies);SDL2_mixer.lib</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -148,7 +148,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x64\*.dll" "$(OutputPath)" /R /Y</C
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x64;$(SolutionDir)3rdParty\SDL2\lib\x64;$(SolutionDir)3rdParty\SDL2_image\lib\x64;$(SolutionDir)3rdParty\Box2D\lib\x64;$(SolutionDir)3rdParty\SDL2_mixer\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;%(AdditionalDependencies);SDL2_mixer.lib;box2d_d.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;vld.lib;%(AdditionalDependencies);SDL2_mixer.lib;box2d_d.lib</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -183,7 +183,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x86\*.dll" "$(OutputPath)" /R /Y</Com
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x86;$(SolutionDir)3rdParty\SDL2\lib\x86;$(SolutionDir)3rdParty\SDL2_image\lib\x86;$(SolutionDir)3rdParty\Box2D\lib\x86;$(SolutionDir)3rdParty\SDL2_mixer\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;box2d.lib;%(AdditionalDependencies);SDL2_mixer.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;vld.lib;box2d.lib;%(AdditionalDependencies);SDL2_mixer.lib</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -218,7 +218,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x64;$(SolutionDir)3rdParty\SDL2\lib\x64;$(SolutionDir)3rdParty\SDL2_image\lib\x64;$(SolutionDir)3rdParty\Box2D\lib\x64;$(SolutionDir)3rdParty\SDL2_mixer\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;%(AdditionalDependencies);SDL2_mixer.lib;box2d.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;vld.lib;%(AdditionalDependencies);SDL2_mixer.lib;box2d.lib</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
