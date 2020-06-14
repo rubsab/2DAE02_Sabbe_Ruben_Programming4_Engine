@@ -1,13 +1,12 @@
-Minigin/Win32/Release/
 Minigin/Win32/Debug/
-Minigin/x64/Release/
 Minigin/x64/Debug/
+Minigin/x64/Release/
 x64/Release/
 x64/Debug/
 Win32/Release/
 Win32/Debug/
+Minigin/Win32/Release/
 .vs/
-*.dll
 *.pdb
 *.idb
 *.tlog
@@ -16,4 +15,3 @@ Win32/Debug/
 *.ilk
 *.txt
 *.log
-*.dll

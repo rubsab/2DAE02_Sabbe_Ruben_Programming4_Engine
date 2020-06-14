@@ -59,12 +59,14 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\vld.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\vld.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -98,8 +100,6 @@
       <PrecompiledHeaderFile>MiniginPCH.h</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
       <ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
-      <FunctionLevelLinking>
-      </FunctionLevelLinking>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -112,16 +112,14 @@
 xcopy "$(SolutionDir)3rdParty\SDL2_image\lib\x86\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x86\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x86\*.dll" "$(OutputPath)" /R /Y
-xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\x86\*.dll" "$(OutputPath)" /R /Y
-xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\x86\*.pdb" "$(OutputPath)" /R /Y
-xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\x86\*.manifest" "$(OutputPath)" /R /Y</Command>
+xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\Win32\*.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x86;$(SolutionDir)3rdParty\SDL2\lib\x86;$(SolutionDir)3rdParty\SDL2_image\lib\x86;$(SolutionDir)3rdParty\Box2D\lib\x86;$(SolutionDir)3rdParty\SDL2_mixer\lib\x86;$(SolutionDir)3rdParty\VisualLeakDetector\lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;SDL2_mixer.lib;%(AdditionalDependencies);box2d_d.lib;vld.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x86;$(SolutionDir)3rdParty\SDL2\lib\x86;$(SolutionDir)3rdParty\SDL2_image\lib\x86;$(SolutionDir)3rdParty\Box2D\lib\x86;$(SolutionDir)3rdParty\SDL2_mixer\lib\x86;$(SolutionDir)3rdParty\VisualLeakDetector\lib\Win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;vld.lib;box2d_d.lib;%(AdditionalDependencies);SDL2_mixer.lib</AdditionalDependencies>
     </Lib>
     <ProjectReference>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -148,10 +146,10 @@ xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\x86\*.manifest" "$(OutputPa
 xcopy "$(SolutionDir)3rdParty\SDL2_image\lib\x64\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x64\*.dll" "$(OutputPath)" /R /Y
-xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\x64\*.dll" "$(OutputPath)" /R /Y</Command>
+xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\Win64\*.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x64;$(SolutionDir)3rdParty\SDL2\lib\x64;$(SolutionDir)3rdParty\SDL2_image\lib\x64;$(SolutionDir)3rdParty\Box2D\lib\x64;$(SolutionDir)3rdParty\SDL2_mixer\lib\x64;$(SolutionDir)3rdParty\VisualLeakDetector\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x64;$(SolutionDir)3rdParty\SDL2\lib\x64;$(SolutionDir)3rdParty\SDL2_image\lib\x64;$(SolutionDir)3rdParty\Box2D\lib\x64;$(SolutionDir)3rdParty\SDL2_mixer\lib\x64;$(SolutionDir)3rdParty\VisualLeakDetector\lib\Win64</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;SDL2_mixer.lib;vld.lib;box2d_d.lib</AdditionalDependencies>
     </Lib>
     <ProjectReference>
@@ -185,16 +183,14 @@ xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\x64\*.dll" "$(OutputPath)" 
 xcopy "$(SolutionDir)3rdParty\SDL2_image\lib\x86\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x86\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x86\*.dll" "$(OutputPath)" /R /Y
-xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\x86\*.dll" "$(OutputPath)" /R /Y
-xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\x86\*.pdb" "$(OutputPath)" /R /Y
-xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\x86\*.manifest" "$(OutputPath)" /R /Y</Command>
+xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\Win32\*.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x86;$(SolutionDir)3rdParty\SDL2\lib\x86;$(SolutionDir)3rdParty\SDL2_image\lib\x86;$(SolutionDir)3rdParty\Box2D\lib\x86;$(SolutionDir)3rdParty\SDL2_mixer\lib\x86;$(SolutionDir)3rdParty\VisualLeakDetector\lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;SDL2_mixer.lib;%(AdditionalDependencies);box2d.lib;vld.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x86;$(SolutionDir)3rdParty\SDL2\lib\x86;$(SolutionDir)3rdParty\SDL2_image\lib\x86;$(SolutionDir)3rdParty\Box2D\lib\x86;$(SolutionDir)3rdParty\SDL2_mixer\lib\x86;$(SolutionDir)3rdParty\VisualLeakDetector\lib\Win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;vld.lib;box2d.lib;%(AdditionalDependencies);SDL2_mixer.lib</AdditionalDependencies>
     </Lib>
     <ProjectReference>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -224,10 +220,10 @@ xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\x86\*.manifest" "$(OutputPa
 xcopy "$(SolutionDir)3rdParty\SDL2_image\lib\x64\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x64\*.dll" "$(OutputPath)" /R /Y
-xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\x64\*.dll" "$(OutputPath)" /R /Y</Command>
+xcopy "$(SolutionDir)3rdParty\VisualLeakDetector\bin\Win64\*.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x64;$(SolutionDir)3rdParty\SDL2\lib\x64;$(SolutionDir)3rdParty\SDL2_image\lib\x64;$(SolutionDir)3rdParty\Box2D\lib\x64;$(SolutionDir)3rdParty\SDL2_mixer\lib\x64;$(SolutionDir)3rdParty\VisualLeakDetector\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x64;$(SolutionDir)3rdParty\SDL2\lib\x64;$(SolutionDir)3rdParty\SDL2_image\lib\x64;$(SolutionDir)3rdParty\Box2D\lib\x64;$(SolutionDir)3rdParty\SDL2_mixer\lib\x64;$(SolutionDir)3rdParty\VisualLeakDetector\lib\Win64</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;xinput.lib;SDL2_mixer.lib;vld.lib;box2d.lib</AdditionalDependencies>
     </Lib>
     <ProjectReference>
