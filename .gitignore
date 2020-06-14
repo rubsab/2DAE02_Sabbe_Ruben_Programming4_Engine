@@ -3,9 +3,10 @@ Minigin/x64/Debug/
 Minigin/x64/Release/
 x64/Release/
 x64/Debug/
+Win32/Release/
+Win32/Debug/
 Minigin/Win32/Release/
 .vs/
-Win32/
 *.pdb
 *.idb
 *.tlog
