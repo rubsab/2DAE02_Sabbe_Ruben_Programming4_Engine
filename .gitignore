@@ -9,6 +9,7 @@ Win32/Debug/
 *.idb
 *.tlog
 *.obj
+*.exe
 *.ilk
 *.txt
 *.log
