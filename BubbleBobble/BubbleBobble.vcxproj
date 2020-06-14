@@ -121,14 +121,16 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;$(SolutionDir)3rdParty/VLD/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(SolutionDir)3rdParty/VLD/lib/Win32/vld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -141,12 +143,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;$(SolutionDir)3rdParty/VLD/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)3rdParty\VLD\lib\Win64\vld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
@@ -165,7 +168,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Minigin;$(SolutionDir)3rdParty/SDL2_ttf/include;$(SolutionDir)3rdParty/SDL2/include;$(SolutionDir)3rdParty/SDL2_image/include;$(SolutionDir)3rdParty/glm;$(SolutionDir)3rdParty/Box2D/include;$(SolutionDir)3rdParty/SDL2_mixer/include;$(SolutionDir)3rdParty/VLD/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -175,6 +178,7 @@
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>

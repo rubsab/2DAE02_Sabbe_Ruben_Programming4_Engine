@@ -12,7 +12,9 @@
 #include "../Scene/GameObject.h"
 #include "../Scene/Scene.h"
 #include "../Components/Components.h"
+#if _DEBUG
 #include <vld.h>
+#endif
 #include "../Helpers/Logger.h"
 
 using namespace std;
