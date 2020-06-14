@@ -10,6 +10,7 @@
 #include "RenderComponent.h"
 #include "TransformComponent.h"
 #include "../Managers/ResourceManager.h"
+#include "glm/gtx/rotate_vector.hpp"
 
 void MyEngine::TextComponent::Update(const float deltaTime)
 {
@@ -43,9 +44,11 @@ void MyEngine::TextComponent::Render() const
 	SDL_Rect dstRect{ static_cast<int>(pos.x), static_cast<int>(pos.y) };
 	SDL_QueryTexture(m_pTexture->GetSDLTexture(), nullptr, nullptr, &dstRect.w, &dstRect.h);
 	SDL_Point pivot = { int(m_Pivot.x * dstRect.w), int(m_Pivot.y * dstRect.h) };
-	dstRect.x += pivot.x + int(m_Offset.x);
-	dstRect.y += pivot.y + int(m_Offset.y);
-	Renderer::GetInstance()->RenderTexture(*m_pTexture, &dstRect, nullptr, m_Angle, pivot, false);
+	glm::fvec2 worldOffset = { m_Offset.x * dstRect.w, m_Offset.y * dstRect.h };
+	worldOffset = glm::rotate(worldOffset, -m_pGameObject->GetComponent<TransformComponent>()->GetRotation() * float(M_PI) / 180.0f);
+	dstRect.x += -pivot.x + int(worldOffset.x);
+	dstRect.y += pivot.y + int(worldOffset.y);
+	Renderer::GetInstance()->RenderTexture(*m_pTexture, &dstRect, nullptr, m_pGameObject->GetComponent<TransformComponent>()->GetRotation() + m_Angle, pivot, false);
 }
 
 MyEngine::TextComponent::TextComponent(const std::string& text, Font* font, SDL_Color color, const glm::fvec2& pivot, const float angle, const glm::fvec2& offSet)

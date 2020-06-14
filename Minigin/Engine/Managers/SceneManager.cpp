@@ -3,17 +3,18 @@
 #include "../Scene/Scene.h"
 #include "../Helpers/Logger.h"
 #include <algorithm>
+#include "InputManager.h"
 
 void MyEngine::SceneManager::Update(const float deltaTime)
 {
 	if (m_ActiveScene >= 0)
-		m_Scenes[m_ActiveScene]->BaseUpdate(deltaTime);
+		m_Scenes[m_ActiveScene]->Update(deltaTime);
 }
 
 void MyEngine::SceneManager::FixedUpdate(const float fixedDeltaTime)
 {
 	if (m_ActiveScene >= 0)
-		m_Scenes[m_ActiveScene]->BaseFixedUpdate(fixedDeltaTime);
+		m_Scenes[m_ActiveScene]->FixedUpdate(fixedDeltaTime);
 	DeleteToDeletes();
 	if (!m_DelayedName.empty())
 	{
@@ -29,7 +30,7 @@ void MyEngine::SceneManager::FixedUpdate(const float fixedDeltaTime)
 void MyEngine::SceneManager::Render() const
 {
 	if (m_ActiveScene >= 0)
-		m_Scenes[m_ActiveScene]->BaseRender();
+		m_Scenes[m_ActiveScene]->Render();
 }
 
 void MyEngine::SceneManager::DeleteToDeletes()
@@ -66,6 +67,7 @@ MyEngine::Scene* MyEngine::SceneManager::RemoveScene(const std::string& name)
 		}
 		else if (it - m_Scenes.begin() < m_ActiveScene)
 			m_ActiveScene--;
+		MyEngine::InputManager::GetInstance()->RemoveCommandsByIdentifierName((*it)->GetName());
 		Scene* scene = *it;
 		m_Scenes.erase(it);
 		return scene;

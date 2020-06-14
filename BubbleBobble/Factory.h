@@ -192,6 +192,10 @@ inline void CreateMenu(int windowHeight)
 	CreatePlayer(1, windowHeight);
 	CreatePlayer(2, windowHeight);
 	Scene* pMenuScene = new Scene("MenuScene");
+	GameObject* pImage = new GameObject();
+	pImage->AddComponent(new RenderComponent());
+	pImage->GetComponent<RenderComponent>()->AddTexture("BackGround.png", false, false, 0, 0, 0.0f, 640, 500, { 0.0f, 1.0f });
+	pMenuScene->Add(pImage);
 	InputManager::GetInstance()->AddCommand({ {VK_ESCAPE, Hardware::KeyBoard}, {XINPUT_GAMEPAD_START, Hardware::Controller, 0}, {XINPUT_GAMEPAD_START, Hardware::Controller, 1} }, new Command{ []() { InputManager::GetInstance()->Quit(); }, ButtonState::Pressed, "MenuScene" });
 	InputManager::GetInstance()->AddCommand({ {VK_ESCAPE, Hardware::KeyBoard}, {XINPUT_GAMEPAD_START, Hardware::Controller, 0}, {XINPUT_GAMEPAD_START, Hardware::Controller, 1} }, new Command{ []() {LevelManager::GetInstance()->Notify(MyEngine::Event(LevelManager::LevelManagerEvent::GoBackToMenu)); }, ButtonState::Pressed, "" });
 	InputManager::GetInstance()->AddCommand({ {'1', Hardware::KeyBoard }, {XINPUT_GAMEPAD_LEFT_SHOULDER, Hardware::Controller, 0} }, new Command{ [windowHeight]() {DataHolder::GetInstance()->GetPlayers().back()->SetActive(false); CreateLevel(0, windowHeight, 0.0f); }, ButtonState::Pressed, "MenuScene" });

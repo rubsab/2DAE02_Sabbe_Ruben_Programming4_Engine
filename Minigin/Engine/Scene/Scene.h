@@ -5,15 +5,11 @@
 namespace MyEngine
 {
 	class GameObject;
-	class Scene
+	class Scene final
 	{
 	public:
 		void Add(GameObject* pObject, float depth = 0.0f);
 		void Invoke(std::function<void()> func, float delay);
-
-		void BaseUpdate(const float deltaTime);
-		void BaseFixedUpdate(const float fixedDeltaTime);
-		void BaseRender() const;
 
 		Scene(const std::string& name, const bool removeOnDeactivate = false);
 		~Scene();
@@ -25,11 +21,9 @@ namespace MyEngine
 		const std::string& GetName() const { return m_Name; }
 		const bool GetShouldRemove() const { return m_RemoveOnDeactivate; }
 
-	protected:
-
-		virtual void Update(const float) {}
-		virtual void FixedUpdate(const float) {}
-		virtual void Render() const {}
+		void Update(const float);
+		void FixedUpdate(const float);
+		void Render() const;
 
 	private: 
 		friend class SceneManager;

@@ -8,8 +8,11 @@
 MyEngine::InputManager::~InputManager()
 {
 	DestroyMap(m_ControllerMappings);
+	m_ControllerMappings.clear();
 	DestroyMap(m_KeyBoardMappings);
+	m_KeyBoardMappings.clear();
 	DestroyMap(m_MouseMappings);
+	m_MouseMappings.clear();
 }
 
 void MyEngine::InputManager::Init(SDL_Window* pWindow, const std::string& ignoreScene)

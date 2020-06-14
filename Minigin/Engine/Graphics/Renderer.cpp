@@ -48,6 +48,5 @@ void MyEngine::Renderer::RenderTexture(const Texture2D& texture, const SDL_Rect*
 	int w, h;
 	SDL_GetRendererOutputSize(m_Renderer, &w, &h);
 	SDL_Rect rect{ dstRect->x, h - dstRect->y, dstRect->w, dstRect->h };
-	SDL_Point newPivot{ pivot.x, - pivot.y };
-	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), srcRect, &rect, angle, &pivot, SDL_RendererFlip(isMirrored));
+	SDL_RenderCopyEx(m_Renderer, texture.GetSDLTexture(), srcRect, &rect, angle, &pivot, SDL_RendererFlip(isMirrored));
 }
