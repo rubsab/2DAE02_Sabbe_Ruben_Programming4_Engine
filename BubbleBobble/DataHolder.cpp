@@ -10,7 +10,7 @@ DataHolder::~DataHolder()
 
 void DataHolder::Init(int windowWidth, int windowHeight)
 {
-	LevelDataParser::ParseFile("../Resources/BBSprites/SeparatedLevelData.dat", "../Resources/BBSprites/SeparatedEnemyData.dat", m_Levels);
+	LevelDataParser::ParseFile("../Resources/Data/SeparatedLevelData.dat", "../Resources/Data/SeparatedEnemyData.dat", m_Levels);
 	for (Level& level : m_Levels)
 	{
 		level.WindowWidth = windowWidth;

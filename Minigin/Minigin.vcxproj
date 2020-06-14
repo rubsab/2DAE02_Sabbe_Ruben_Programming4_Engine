@@ -113,7 +113,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_image\lib\x86\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x86\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x86\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\VLD\bin\Win32\*.dll" "$(OutputPath)" /R /Y
-xcopy "$(SolutionDir)3rdParty\VLD\bin\Win32\*.manifest" "$(OutputPath)" /R /Y</Command>
+xcopy "$(SolutionDir)3rdParty\VLD\bin\Win32\*.manifest" "$(OutputPath)" /R /Y
+xcopy "$(SolutionDir)Resources" "$(SolutionDir)Win32\Resources" /R /Y /S /I</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x86;$(SolutionDir)3rdParty\SDL2\lib\x86;$(SolutionDir)3rdParty\SDL2_image\lib\x86;$(SolutionDir)3rdParty\Box2D\lib\x86;$(SolutionDir)3rdParty\SDL2_mixer\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -148,7 +149,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_image\lib\x64\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x64\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\VLD\bin\Win64\*.dll" "$(OutputPath)" /R /Y
-xcopy "$(SolutionDir)3rdParty\VLD\bin\Win64\*.manifest" "$(OutputPath)" /R /Y</Command>
+xcopy "$(SolutionDir)3rdParty\VLD\bin\Win64\*.manifest" "$(OutputPath)" /R /Y
+xcopy "$(SolutionDir)Resources" "$(SolutionDir)x64\Resources" /R /Y /S /I</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x64;$(SolutionDir)3rdParty\SDL2\lib\x64;$(SolutionDir)3rdParty\SDL2_image\lib\x64;$(SolutionDir)3rdParty\Box2D\lib\x64;$(SolutionDir)3rdParty\SDL2_mixer\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -186,7 +188,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_image\lib\x86\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x86\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x86\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\VLD\bin\Win32\*.dll" "$(OutputPath)" /R /Y
-xcopy "$(SolutionDir)3rdParty\VLD\bin\Win32\*.manifest" "$(OutputPath)" /R /Y</Command>
+xcopy "$(SolutionDir)3rdParty\VLD\bin\Win32\*.manifest" "$(OutputPath)" /R /Y
+xcopy "$(SolutionDir)Resources" "$(SolutionDir)Win32\Resources" /R /Y /S /I</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x86;$(SolutionDir)3rdParty\SDL2\lib\x86;$(SolutionDir)3rdParty\SDL2_image\lib\x86;$(SolutionDir)3rdParty\Box2D\lib\x86;$(SolutionDir)3rdParty\SDL2_mixer\lib\x86;$(SolutionDir)3rdParty\VLD\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -224,7 +227,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_image\lib\x64\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\x64\*.dll" "$(OutputPath)" /R /Y
 xcopy "$(SolutionDir)3rdParty\VLD\bin\Win64\*.dll" "$(OutputPath)" /R /Y
-xcopy "$(SolutionDir)3rdParty\VLD\bin\Win64\*.manifest" "$(OutputPath)" /R /Y</Command>
+xcopy "$(SolutionDir)3rdParty\VLD\bin\Win64\*.manifest" "$(OutputPath)" /R /Y
+xcopy "$(SolutionDir)Resources" "$(SolutionDir)x64\Resources" /R /Y /S /I</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_ttf\lib\x64;$(SolutionDir)3rdParty\SDL2\lib\x64;$(SolutionDir)3rdParty\SDL2_image\lib\x64;$(SolutionDir)3rdParty\Box2D\lib\x64;$(SolutionDir)3rdParty\SDL2_mixer\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
