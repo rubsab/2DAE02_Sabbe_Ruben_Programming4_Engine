@@ -58,8 +58,8 @@ void MyEngine::Minigin::Cleanup()
 	Renderer::GetInstance()->Destroy();
 	SDL_DestroyWindow(m_pWindow);
 	Renderer::Release();
-	SceneManager::Release();
 	InputManager::Release();
+	SceneManager::Release();
 	ResourceManager::Release();
 	SoundManager::Release();
 	PhysicsManager::Release();

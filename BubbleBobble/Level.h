@@ -31,8 +31,8 @@ struct Level
 
 	bool IsWallInFront(const glm::fvec2& pos, bool isLookingLeft) const
 	{
-		int checkCol = int(pos.x / 20.0f + (isLookingLeft ? -1.0f : 1.0f));
-		int checkRow = int((WindowHeight - pos.y) / 20.0f - 0.1f);
+		int checkCol = int(pos.x / 20.0f + (isLookingLeft ? -1.0f : 1.0f)) % 32;
+		int checkRow = int((WindowHeight - pos.y) / 20.0f - 0.1f) % 25;
 		if (checkRow < 24)
 			return Lines[checkRow][checkCol] || Lines[checkRow + 1][checkCol];
 		else
@@ -41,15 +41,37 @@ struct Level
 
 	bool IsWallBelow(const glm::fvec2& pos) const
 	{
-		int checkCol = int(pos.x / 20.0f);
-		int checkRow = int((WindowHeight - pos.y) / 20.0f + 1.0f);
+		int checkCol = int(pos.x / 20.0f) % 32;
+		int checkRow = int((WindowHeight - pos.y) / 20.0f + 1.0f) % 25;
 		return Lines[checkRow][checkCol];
 	}
 
 	bool IsWallAbove(const glm::fvec2& pos) const
 	{
-		int checkCol = int(pos.x / 20.0f);
-		int checkRow = int((WindowHeight - pos.y) / 20.0f - 1.0f);
+		int checkCol = int(pos.x / 20.0f) % 32;
+		int checkRow = int((WindowHeight - pos.y) / 20.0f - 1.0f) % 25;
 		return Lines[checkRow][checkCol];
+	}
+
+	bool CanJumpUp(const glm::fvec2& pos) const
+	{
+		int checkCol = int(pos.x / 20.0f) % 32;
+		int checkRow = int((WindowHeight - pos.y) / 20.0f - 1.0f) % 25;
+		for (int rowCounter{}; rowCounter < 5; rowCounter++)
+		{
+			if (Lines[checkRow - rowCounter][checkCol])
+				return true;
+		}
+		return false;
+	}
+
+	int GetRow(const glm::fvec2& pos) const
+	{
+		return int((WindowHeight - pos.y) / 20.0f - 0.1f) % 25;
+	}
+
+	int GetCol(const glm::fvec2& pos) const
+	{
+		return int(pos.x / 20.0f) % 32;
 	}
 };

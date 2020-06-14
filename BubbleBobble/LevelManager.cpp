@@ -13,12 +13,16 @@ void LevelManager::Notify(const MyEngine::Event event, const int value, const My
 			break;
 		}
 		DataHolder::GetInstance()->RemoveAllEnemies();
-		CreateLevel(m_CurrentLevel + 1, DataHolder::GetInstance()->GetLevel(m_CurrentLevel).WindowHeight, 3.0f);
+		CreateLevel(m_CurrentLevel + 1, DataHolder::GetInstance()->GetLevel(m_CurrentLevel).WindowHeight, 4.0f);
 		break;
 	case(GoBackToMenu):
 		DataHolder::GetInstance()->RemoveAllEnemies();
 		SceneManager::GetInstance()->SetSceneActive("MenuScene");
 		m_CurrentLevel = 0;
+		break;
+	case(ReloadLevel):
+		SceneManager::GetInstance()->SetSceneActive("BufferScene");
+		SceneManager::GetInstance()->GetActiveScene()->Invoke([this]() { CreateLevel(m_CurrentLevel, DataHolder::GetInstance()->GetLevel(m_CurrentLevel).WindowHeight, 0.0f); m_CurrentLevel--; }, 0.0f);
 		break;
 	}
 }

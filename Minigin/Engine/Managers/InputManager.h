@@ -70,7 +70,7 @@ namespace MyEngine
 		const SDL_Point GetMouseMovement() const;
 		void RemoveCommandsByIdentifierName(const std::string& sceneName);
 	private:
-		void DestroyMap(const std::map<std::pair<const int, const int>, std::vector<Command*>>& map);
+		void DestroyMap(std::map<std::pair<const int, const int>, std::vector<Command*>>& map);
 		void UpdateStates(const Hardware& hardWare);
 		void UpdateState(const bool down, std::pair<const std::pair<const int, const int>, ButtonState>& button);
 		void ExecuteCommands(const Hardware& hardWare, const std::map<std::pair<const int, const int>, std::vector<Command*>>& mappings);

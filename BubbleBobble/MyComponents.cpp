@@ -9,6 +9,8 @@
 #include "Engine\Managers\ResourceManager.h"
 #include "Engine\Scene\Scene.h"
 #include "Factory.h"
+#include "glm\glm.hpp"
+#include "glm\gtx\norm.hpp"
 
 inline glm::fvec2 ScreenBordersCheck(const glm::fvec2& pos)
 {
@@ -75,13 +77,17 @@ void PlayerBehaviourComponent::Render() const {}
 void PlayerBehaviourComponent::Jump()
 {
 	if (currentLevel.IsWallBelow(m_pGameObject->GetComponent<MyEngine::TransformComponent>()->GetPosition()))
-		m_JumpTime += 0.51f;
+	{
+		m_JumpTime += 0.6f;
+		MyEngine::SoundManager::GetInstance()->Notify(MyEngine::Event(SoundEvents::Jump));
+	}
 }
 
 void PlayerBehaviourComponent::Shoot()
 {
 	m_ShootTime = 0.25f;
 	m_pGameObject->SetState((m_pGameObject->GetState() % 2) + 4);
+	MyEngine::SoundManager::GetInstance()->Notify(MyEngine::Event(SoundEvents::BubbleFire));
 }
 
 BubbleBehaviourComponent::BubbleBehaviourComponent(bool isLookingLeft):
@@ -146,7 +152,7 @@ void BubbleBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 		{
 			m_pHeldEnemy = enemy;
 			enemy->SetActive(false);
-			m_pGameObject->GetComponent<MyEngine::RenderComponent>()->AddTexture(MyEngine::ResourceManager::GetInstance()->LoadTexture("bubbles.png"), true, false, 1, 4, 0.25f, currentLevel.WindowWidth / 16, int(currentLevel.WindowHeight / 12.5f), { 0.5f, 0.5f }, 1, { 0.0f, 0.2f /*+ 0.1f * int(enemy.Type)*/ }, { 1.0f, 0.1f });
+			m_pGameObject->GetComponent<MyEngine::RenderComponent>()->AddTexture(MyEngine::ResourceManager::GetInstance()->LoadTexture("bubbles.png"), true, false, 1, 4, 0.25f, currentLevel.WindowWidth / 16, int(currentLevel.WindowHeight / 12.5f), { 0.5f, 0.5f }, 1, { 0.0f, 0.2f + 0.1f * enemy->GetComponent<EnemyBehaviourComponent>()->GetType() }, { 1.0f, 0.1f });
 			m_pGameObject->SetState(1);
 			m_LifeTime = 3.0f;
 			return;
@@ -157,25 +163,30 @@ void BubbleBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
 void BubbleBehaviourComponent::Render() const {}
 
 FruitDropComponent::FruitDropComponent(int enemyType):
-	m_Score(DataHolder::GetInstance()->GetScore(enemyType) * 1000)
+	m_Score(DataHolder::GetInstance()->GetScore(enemyType) * 1000),
+	m_HitTimer(1.0f)
 {}
 
 void FruitDropComponent::Update(const float) {}
 
 void FruitDropComponent::FixedUpdate(const float fixedDeltaTime) 
 {
+	m_HitTimer -= fixedDeltaTime;
 	TransformComponent* trans = m_pGameObject->GetComponent<TransformComponent>();
 	if (!currentLevel.IsWallBelow(trans->GetPosition()))
 	{
 		trans->SetPosition(trans->GetPosition().x, trans->GetPosition().y - fixedDeltaTime * 60.0f);
 		trans->SetPosition(ScreenBordersCheck(trans->GetPosition()));
 	}
+	if (m_HitTimer >= 0.0f)
+		return;
 	for (GameObject* pPlayer : DataHolder::GetInstance()->GetPlayers())
 	{
 		if (m_pGameObject->GetComponent<PhysicsComponent>()->IsOverlapping(pPlayer->GetComponent<PhysicsComponent>()))
 		{
 			pPlayer->GetComponent<PlayerBehaviourComponent>()->IncreaseScore(m_Score);
 			m_pGameObject->SetShouldDespawn(true);
+			SoundManager::GetInstance()->Notify(MyEngine::Event(SoundEvents::ItemPickup));
 		}
 	}
 
@@ -186,10 +197,79 @@ void FruitDropComponent::Render() const {}
 EnemyBehaviourComponent::EnemyBehaviourComponent(int type, float delay):
 	m_Type(type),
 	m_Delay(delay)
-{}
+{
+}
 
 void EnemyBehaviourComponent::Update(const float) {}
 
-void EnemyBehaviourComponent::FixedUpdate(const float) {}
+void EnemyBehaviourComponent::FixedUpdate(const float fixedDeltaTime)
+{
+	if(!m_ClosestPlayer)
+		SearchPlayer();
+	m_Delay -= fixedDeltaTime;
+	if (m_Delay >= 0.0f)
+		return;
+	TransformComponent* closestTrans = m_ClosestPlayer->GetComponent<TransformComponent>();
+	TransformComponent* trans = m_pGameObject->GetComponent<TransformComponent>();
+	int state = m_pGameObject->GetState();
+	//Movement
+	switch (m_Type)
+	{
+	default:
+	case(EnemyType::Mighta):
+	case(EnemyType::ZenChan):
+		switch (state)
+		{
+		case(0):
+		case(1):
+			trans->SetPosition(trans->GetPosition().x + -(state * 2 - 1) * fixedDeltaTime * 120.0f, trans->GetPosition().y);
+			if (currentLevel.IsWallInFront(trans->GetPosition(), bool(state)))
+				m_pGameObject->SetState(1 - state);
+			if (!currentLevel.IsWallBelow(trans->GetPosition()))
+				m_pGameObject->SetState(state + 4);
+			if ((closestTrans->GetPosition().y - trans->GetPosition().y > 40.0f) && currentLevel.CanJumpUp(trans->GetPosition()) && currentLevel.GetRow(trans->GetPosition()) > 5)
+				Jump();
+			break;
+		case(2):
+		case(3):
+			m_JumpTime -= fixedDeltaTime;
+			trans->SetPosition(trans->GetPosition().x, trans->GetPosition().y + fixedDeltaTime * 200.0f);
+			if (m_JumpTime <= 0.0f)
+				m_pGameObject->SetState(state + 2);
+			break;
+		case(4):
+		case(5):
+			trans->SetPosition(trans->GetPosition().x, trans->GetPosition().y - fixedDeltaTime * 94.0f);
+			if (currentLevel.IsWallBelow(trans->GetPosition()))
+			{
+				SearchPlayer();
+				m_pGameObject->SetState(m_pGameObject->GetState() % 2);
+			}
+			break;
+		}
+		break;
+	}
+	trans->SetPosition(ScreenBordersCheck(trans->GetPosition()));
+
+	//Attack
+}
 
 void EnemyBehaviourComponent::Render() const {}
+
+void EnemyBehaviourComponent::Jump()
+{
+	m_JumpTime += 0.6f;
+	m_pGameObject->SetState(m_pGameObject->GetState() % 2 + 2);
+}
+
+void EnemyBehaviourComponent::SearchPlayer()
+{
+	m_ClosestPlayer = DataHolder::GetInstance()->GetPlayers()[0];
+	if (glm::distance2(m_ClosestPlayer->GetComponent<TransformComponent>()->GetPosition(), m_pGameObject->GetComponent<TransformComponent>()->GetPosition()) > glm::distance2(DataHolder::GetInstance()->GetPlayers()[1]->GetComponent<TransformComponent>()->GetPosition(), m_pGameObject->GetComponent<TransformComponent>()->GetPosition()) && DataHolder::GetInstance()->GetPlayers()[1]->IsActive())
+		m_ClosestPlayer = DataHolder::GetInstance()->GetPlayers()[1];
+
+	if (m_ClosestPlayer->GetComponent<TransformComponent>()->GetPosition().x < m_pGameObject->GetComponent<TransformComponent>()->GetPosition().x)
+		m_pGameObject->SetState(5);
+	else
+		m_pGameObject->SetState(4);
+}

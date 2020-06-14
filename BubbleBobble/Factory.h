@@ -13,6 +13,7 @@
 #include "MyComponents.h"
 #include "Engine\Managers\InputManager.h"
 #include "LevelManager.h"
+#include "Engine\Managers\SoundManager.h"
 using namespace MyEngine;
 
 #define currentLevel DataHolder::GetInstance()->GetLevel(LevelManager::GetInstance()->GetCurrentLevel())
@@ -25,7 +26,7 @@ inline MyEngine::GameObject* CreateEnemy(const Enemy& enemy, const int windowHei
 	enemyObj->GetComponent<RenderComponent>()->AddTexture("Enemy.png", true, false, 1, 4, 0.25f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, 0, { 0.0f, int(enemy.Type) / 8.0f }, { 1.0f, 0.125 });
 	enemyObj->GetComponent<RenderComponent>()->AddTexture("Enemy.png", true, false, 1, 4, 0.25f, cellDimension * 2, cellDimension * 2, { 0.5f, 0.5f }, 1, { 0.0f, int(enemy.Type) / 8.0f }, { 1.0f, 0.125 }, { 0.0f, 0.0f }, true);
 	enemyObj->SetState(0);
-	enemyObj->AddComponent(new PhysicsComponent(PhysicsComponent::PhysicsType::Kinematic, { cellDimension / 2.0f + enemy.Col * cellDimension, windowHeight - (cellDimension / 2.0f + (enemy.Row + 2) * cellDimension) }, 0.0f, float(cellDimension), float(cellDimension), 1.0f, 0.3f, 0.0f));
+	enemyObj->AddComponent(new PhysicsComponent(PhysicsComponent::PhysicsType::Kinematic, { cellDimension + enemy.Col * cellDimension, windowHeight - (cellDimension + (enemy.Row + 2) * cellDimension) }, 0.0f, float(cellDimension), float(cellDimension), 1.0f, 0.3f, 0.0f));
 	enemyObj->AddComponent(new EnemyBehaviourComponent(int(enemy.Type), enemy.Delay));
 	DataHolder::GetInstance()->AddEnemy(enemyObj);
 
@@ -188,10 +189,29 @@ inline void CreateLevel(int levelNr, const int windowHeight, float delay)
 
 inline void CreateMenu(int windowHeight)
 {
+	CreatePlayer(1, windowHeight);
+	CreatePlayer(2, windowHeight);
 	Scene* pMenuScene = new Scene("MenuScene");
 	InputManager::GetInstance()->AddCommand({ {VK_ESCAPE, Hardware::KeyBoard}, {XINPUT_GAMEPAD_START, Hardware::Controller, 0}, {XINPUT_GAMEPAD_START, Hardware::Controller, 1} }, new Command{ []() { InputManager::GetInstance()->Quit(); }, ButtonState::Pressed, "MenuScene" });
 	InputManager::GetInstance()->AddCommand({ {VK_ESCAPE, Hardware::KeyBoard}, {XINPUT_GAMEPAD_START, Hardware::Controller, 0}, {XINPUT_GAMEPAD_START, Hardware::Controller, 1} }, new Command{ []() {LevelManager::GetInstance()->Notify(MyEngine::Event(LevelManager::LevelManagerEvent::GoBackToMenu)); }, ButtonState::Pressed, "" });
 	InputManager::GetInstance()->AddCommand({ {'1', Hardware::KeyBoard }, {XINPUT_GAMEPAD_LEFT_SHOULDER, Hardware::Controller, 0} }, new Command{ [windowHeight]() {DataHolder::GetInstance()->GetPlayers().back()->SetActive(false); CreateLevel(0, windowHeight, 0.0f); }, ButtonState::Pressed, "MenuScene" });
 	InputManager::GetInstance()->AddCommand({ {'2', Hardware::KeyBoard }, {XINPUT_GAMEPAD_RIGHT_SHOULDER, Hardware::Controller, 0}, {XINPUT_GAMEPAD_RIGHT_SHOULDER, Hardware::Controller, 1} }, new Command{ [windowHeight]() {DataHolder::GetInstance()->GetPlayers().back()->SetActive(true); CreateLevel(0, windowHeight, 0.0f); }, ButtonState::Pressed, "MenuScene" });
+	InputManager::GetInstance()->AddCommand({ {'R', Hardware::KeyBoard } }, new Command{ []() {LevelManager::GetInstance()->Notify(MyEngine::Event(LevelManager::LevelManagerEvent::ReloadLevel)); }, ButtonState::Pressed, "" });
 	SceneManager::GetInstance()->AddScene(pMenuScene);
+}
+
+enum SoundEvents
+{
+	BubbleFire,
+	ItemPickup,
+	Jump,
+	SoundTrack
+};
+
+inline void CreateSounds()
+{
+	SoundManager::GetInstance()->LoadSoundEffect("Bubble_Fire.wav", MyEngine::Event(BubbleFire));
+	SoundManager::GetInstance()->LoadSoundEffect("Item_Pickup.wav", MyEngine::Event(ItemPickup));
+	SoundManager::GetInstance()->LoadSoundEffect("Jump.wav", MyEngine::Event(Jump));
+	SoundManager::GetInstance()->LoadSoundStream("SoundTrack.mp3", MyEngine::Event(SoundTrack));
 }

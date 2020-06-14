@@ -44,6 +44,7 @@ public:
 	void Render() const override;
 private:
 	int m_Score;
+	float m_HitTimer;
 };
 
 class EnemyBehaviourComponent final : public MyEngine::BaseComponent
@@ -55,6 +56,9 @@ public:
 	void Render() const override;
 	int GetType() const { return m_Type; }
 private:
+	void Jump();
+	void SearchPlayer();
 	int m_Type;
-	float m_Delay;
+	float m_Delay, m_JumpTime;
+	MyEngine::GameObject* m_ClosestPlayer;
 };

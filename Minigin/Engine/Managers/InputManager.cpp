@@ -120,16 +120,16 @@ void MyEngine::InputManager::RemoveCommandsByIdentifierName(const std::string& i
 	ClearCommmandsByIDName(idName, m_MouseMappings);
 }
 
-void MyEngine::InputManager::DestroyMap(const std::map<std::pair<const int, const int>, std::vector<Command*>>& map)
+void MyEngine::InputManager::DestroyMap(std::map<std::pair<const int, const int>, std::vector<Command*>>& map)
 {
-	for (const std::pair<std::pair<const int, const int>, std::vector<Command*>>& pair : map)
+	for (std::pair<const std::pair<const int, const int>, std::vector<Command*>>& pair : map)
 	{
-		for (Command* command : pair.second)
+		for (size_t i{}; i < pair.second.size(); i++)
 		{
-			if (!command->IsDeleted)
+			if (pair.second[i] && !pair.second[i]->IsDeleted)
 			{
-				command->IsDeleted = true;
-				Safe_Delete(command);
+				pair.second[i]->IsDeleted = true;
+				Safe_Delete(pair.second[i]);
 			}
 		}
 	}

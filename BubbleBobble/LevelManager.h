@@ -7,7 +7,8 @@ public:
 	enum LevelManagerEvent
 	{
 		IncreaseLevel,
-		GoBackToMenu
+		GoBackToMenu,
+		ReloadLevel
 	};
 
 	void Notify(const MyEngine::Event event, const int value = 0, const MyEngine::GameObject* object = nullptr) override;
