@@ -10,7 +10,7 @@ Win32/Debug/
 *.tlog
 *.obj
 *.exe
-*.ilk
 *.txt
+*.ilk
 *.log
 *.zip
